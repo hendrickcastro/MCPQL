@@ -26,13 +26,14 @@ No installation needed! Just configure your MCP client:
       "command": "npx",
       "args": ["-y", "hendrickcastro/mcpql"],
       "env": {
-        "DB_USER": "your_username",
-        "DB_PASSWORD": "your_password",
+        "DB_AUTHENTICATION_TYPE": "sql",
         "DB_SERVER": "your_server",
         "DB_NAME": "your_database",
+        "DB_USER": "your_username",
+        "DB_PASSWORD": "your_password",
         "DB_PORT": "1433",
-        "DB_ENCRYPT": "true",
-        "DB_TRUST_SERVER_CERTIFICATE": "false"
+        "DB_ENCRYPT": "false",
+        "DB_TRUST_SERVER_CERTIFICATE": "true"
       }
     }
   }
@@ -47,13 +48,14 @@ No installation needed! Just configure your MCP client:
       "command": "npx",
       "args": ["-y", "hendrickcastro/mcpql"],
       "env": {
+        "DB_AUTHENTICATION_TYPE": "sql",
         "DB_SERVER": "your_server",
         "DB_NAME": "your_database",
         "DB_USER": "your_username",
         "DB_PASSWORD": "your_password",
         "DB_PORT": "1433",
-        "DB_TRUST_SERVER_CERTIFICATE": "yes",
-        "DB_ENCRYPT": "true"
+        "DB_ENCRYPT": "false",
+        "DB_TRUST_SERVER_CERTIFICATE": "true"
       }
     }
   }
@@ -71,9 +73,17 @@ npm run build
 ```
 
 2. **Configure database connection:**
+Create a `.env` file with your database credentials:
 ```bash
-cp .env.example .env
-# Edit .env with your database credentials
+# Basic SQL Server connection
+DB_AUTHENTICATION_TYPE=sql
+DB_SERVER=localhost
+DB_NAME=MyDatabase
+DB_USER=sa
+DB_PASSWORD=YourPassword123!
+DB_PORT=1433
+DB_ENCRYPT=false
+DB_TRUST_SERVER_CERTIFICATE=true
 ```
 
 3. **Configure MCP client with local path:**
@@ -192,20 +202,204 @@ const samples = await mcp_get_sample_values({
 });
 ```
 
-## 🔧 Environment Variables
+## 🔧 Environment Variables & Connection Types
 
-All database connection parameters are configurable via environment variables:
+MCPQL supports multiple SQL Server connection types with comprehensive configuration options:
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `DB_USER` | Database username | Required |
-| `DB_PASSWORD` | Database password | Required |
-| `DB_SERVER` | SQL Server hostname/IP | Required |
-| `DB_NAME` | Database name | Required |
-| `DB_PORT` | SQL Server port | 1433 |
-| `DB_ENCRYPT` | Enable encryption | false |
-| `DB_TRUST_SERVER_CERTIFICATE` | Trust server certificate | false |
-| `DB_TIMEOUT` | Connection timeout (ms) | 30000 |
+### 🔐 Authentication Types
+
+Set `DB_AUTHENTICATION_TYPE` to one of:
+- `sql` - SQL Server Authentication (default)
+- `windows` - Windows Authentication
+- `azure-ad` - Azure Active Directory Authentication
+
+### 📋 Complete Environment Variables
+
+| Variable | Description | Default | Required For |
+|----------|-------------|---------|--------------|
+| **Basic Connection** |
+| `DB_AUTHENTICATION_TYPE` | Authentication type (sql/windows/azure-ad) | sql | All |
+| `DB_SERVER` | SQL Server hostname/IP | - | All |
+| `DB_NAME` | Database name | - | All |
+| `DB_PORT` | SQL Server port | 1433 | All |
+| `DB_TIMEOUT` | Connection timeout (ms) | 30000 | All |
+| `DB_REQUEST_TIMEOUT` | Request timeout (ms) | 30000 | All |
+| **SQL Server Authentication** |
+| `DB_USER` | SQL Server username | - | SQL Auth |
+| `DB_PASSWORD` | SQL Server password | - | SQL Auth |
+| **Windows Authentication** |
+| `DB_DOMAIN` | Windows domain | - | Windows Auth |
+| `DB_USER` | Windows username | current user | Windows Auth |
+| `DB_PASSWORD` | Windows password | - | Windows Auth |
+| **Azure AD Authentication** |
+| `DB_USER` | Azure AD username | - | Azure AD (Password) |
+| `DB_PASSWORD` | Azure AD password | - | Azure AD (Password) |
+| `DB_AZURE_CLIENT_ID` | Azure AD App Client ID | - | Azure AD (Service Principal) |
+| `DB_AZURE_CLIENT_SECRET` | Azure AD App Client Secret | - | Azure AD (Service Principal) |
+| `DB_AZURE_TENANT_ID` | Azure AD Tenant ID | - | Azure AD (Service Principal) |
+| **SQL Server Express** |
+| `DB_INSTANCE_NAME` | Named instance (e.g., SQLEXPRESS) | - | Express instances |
+| **Security Settings** |
+| `DB_ENCRYPT` | Enable encryption | false | All |
+| `DB_TRUST_SERVER_CERTIFICATE` | Trust server certificate | false | All |
+| `DB_ENABLE_ARITH_ABORT` | Enable arithmetic abort | true | All |
+| `DB_USE_UTC` | Use UTC for dates | true | All |
+| **Connection Pool** |
+| `DB_POOL_MAX` | Maximum connections | 10 | All |
+| `DB_POOL_MIN` | Minimum connections | 0 | All |
+| `DB_POOL_IDLE_TIMEOUT` | Idle timeout (ms) | 30000 | All |
+| **Advanced Settings** |
+| `DB_CANCEL_TIMEOUT` | Cancel timeout (ms) | 5000 | All |
+| `DB_PACKET_SIZE` | Packet size (bytes) | 4096 | All |
+| `DB_CONNECTION_STRING` | Complete connection string | - | Alternative to individual settings |
+
+## 🔧 Connection Configuration Examples
+
+### 1. 🏠 SQL Server Local (SQL Authentication)
+```json
+{
+  "mcpServers": {
+    "mcpql": {
+      "command": "npx",
+      "args": ["-y", "hendrickcastro/mcpql"],
+      "env": {
+        "DB_AUTHENTICATION_TYPE": "sql",
+        "DB_SERVER": "localhost",
+        "DB_NAME": "MyDatabase",
+        "DB_USER": "sa",
+        "DB_PASSWORD": "YourPassword123!",
+        "DB_PORT": "1433",
+        "DB_ENCRYPT": "false",
+        "DB_TRUST_SERVER_CERTIFICATE": "true"
+      }
+    }
+  }
+}
+```
+
+### 2. 🏢 SQL Server Express (Named Instance)
+```json
+{
+  "mcpServers": {
+    "mcpql": {
+      "command": "npx",
+      "args": ["-y", "hendrickcastro/mcpql"],
+      "env": {
+        "DB_AUTHENTICATION_TYPE": "sql",
+        "DB_SERVER": "localhost",
+        "DB_INSTANCE_NAME": "SQLEXPRESS",
+        "DB_NAME": "MyDatabase",
+        "DB_USER": "sa",
+        "DB_PASSWORD": "YourPassword123!",
+        "DB_ENCRYPT": "false",
+        "DB_TRUST_SERVER_CERTIFICATE": "true"
+      }
+    }
+  }
+}
+```
+
+### 3. 🪟 Windows Authentication
+```json
+{
+  "mcpServers": {
+    "mcpql": {
+      "command": "npx",
+      "args": ["-y", "hendrickcastro/mcpql"],
+      "env": {
+        "DB_AUTHENTICATION_TYPE": "windows",
+        "DB_SERVER": "MYSERVER",
+        "DB_NAME": "MyDatabase",
+        "DB_DOMAIN": "MYDOMAIN",
+        "DB_USER": "myuser",
+        "DB_PASSWORD": "mypassword",
+        "DB_ENCRYPT": "false",
+        "DB_TRUST_SERVER_CERTIFICATE": "true"
+      }
+    }
+  }
+}
+```
+
+### 4. ☁️ Azure SQL Database (Azure AD Password)
+```json
+{
+  "mcpServers": {
+    "mcpql": {
+      "command": "npx",
+      "args": ["-y", "hendrickcastro/mcpql"],
+      "env": {
+        "DB_AUTHENTICATION_TYPE": "azure-ad",
+        "DB_SERVER": "myserver.database.windows.net",
+        "DB_NAME": "MyDatabase",
+        "DB_USER": "user@domain.com",
+        "DB_PASSWORD": "userpassword",
+        "DB_PORT": "1433",
+        "DB_ENCRYPT": "true",
+        "DB_TRUST_SERVER_CERTIFICATE": "false"
+      }
+    }
+  }
+}
+```
+
+### 5. 🔐 Azure SQL Database (Service Principal)
+```json
+{
+  "mcpServers": {
+    "mcpql": {
+      "command": "npx",
+      "args": ["-y", "hendrickcastro/mcpql"],
+      "env": {
+        "DB_AUTHENTICATION_TYPE": "azure-ad",
+        "DB_SERVER": "myserver.database.windows.net",
+        "DB_NAME": "MyDatabase",
+        "DB_AZURE_CLIENT_ID": "your-client-id",
+        "DB_AZURE_CLIENT_SECRET": "your-client-secret",
+        "DB_AZURE_TENANT_ID": "your-tenant-id",
+        "DB_PORT": "1433",
+        "DB_ENCRYPT": "true",
+        "DB_TRUST_SERVER_CERTIFICATE": "false"
+      }
+    }
+  }
+}
+```
+
+### 6. 🔗 Using Connection String
+```json
+{
+  "mcpServers": {
+    "mcpql": {
+      "command": "npx",
+      "args": ["-y", "hendrickcastro/mcpql"],
+      "env": {
+        "DB_CONNECTION_STRING": "Server=localhost;Database=MyDatabase;User Id=sa;Password=YourPassword123!;Encrypt=false;TrustServerCertificate=true;"
+      }
+    }
+  }
+}
+```
+
+## 🚨 Troubleshooting Common Issues
+
+### Connection Issues
+- **"Login failed"**: Check username/password. For Windows auth, ensure `DB_AUTHENTICATION_TYPE=windows`
+- **"Server was not found"**: Verify server name and port. For SQL Express, add `DB_INSTANCE_NAME`
+- **"Certificate" errors**: For local development, set `DB_TRUST_SERVER_CERTIFICATE=true`
+- **Timeout errors**: Increase `DB_TIMEOUT` or check network connectivity
+
+### SQL Server Express Setup
+1. Enable TCP/IP protocol in SQL Server Configuration Manager
+2. Set a static port (usually 1433) or use dynamic port with Browser Service
+3. Configure Windows Firewall to allow SQL Server traffic
+4. Use `DB_INSTANCE_NAME=SQLEXPRESS` for default Express installations
+
+### Azure SQL Database Setup
+1. Create server firewall rules to allow client IP
+2. Use format: `server.database.windows.net` for server name
+3. Always set `DB_ENCRYPT=true` and `DB_TRUST_SERVER_CERTIFICATE=false`
+4. For Service Principal auth, register app in Azure AD and assign permissions
 
 ## 🧪 Testing
 
