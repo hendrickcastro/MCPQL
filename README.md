@@ -3,6 +3,21 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen)](https://nodejs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.8.3-blue)](https://www.typescriptlang.org/)
+[![npm version](https://img.shields.io/npm/v/mcpql.svg)](https://www.npmjs.com/package/mcpql)
+[![Downloads](https://img.shields.io/npm/dm/mcpql.svg)](https://www.npmjs.com/package/mcpql)
+[![GitHub stars](https://img.shields.io/github/stars/hendrickcastro/MCPQL.svg)](https://github.com/hendrickcastro/MCPQL/stargazers)
+[![GitHub issues](https://img.shields.io/github/issues/hendrickcastro/MCPQL.svg)](https://github.com/hendrickcastro/MCPQL/issues)
+[![GitHub forks](https://img.shields.io/github/forks/hendrickcastro/MCPQL.svg)](https://github.com/hendrickcastro/MCPQL/network)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/hendrickcastro/MCPQL/ci.yml?branch=main)](https://github.com/hendrickcastro/MCPQL/actions)
+[![Coverage Status](https://img.shields.io/codecov/c/github/hendrickcastro/MCPQL)](https://codecov.io/gh/hendrickcastro/MCPQL)
+[![SQL Server](https://img.shields.io/badge/SQL%20Server-2016%2B-red)](https://www.microsoft.com/sql-server)
+[![Azure SQL](https://img.shields.io/badge/Azure%20SQL-Supported-blue)](https://azure.microsoft.com/services/sql-database/)
+[![MCP Protocol](https://img.shields.io/badge/MCP-Protocol-purple)](https://github.com/modelcontextprotocol/sdk)
+[![Claude Desktop](https://img.shields.io/badge/Claude-Desktop-orange)](https://claude.ai/desktop)
+[![Cursor IDE](https://img.shields.io/badge/Cursor-IDE-green)](https://cursor.sh/)
+[![Docker](https://img.shields.io/badge/Docker-Ready-blue)](https://hub.docker.com/r/hendrickcastro/mcpql)
+[![Security](https://img.shields.io/badge/Security-Audited-green)](https://github.com/hendrickcastro/MCPQL/security)
+[![Maintenance](https://img.shields.io/badge/Maintained-Yes-brightgreen)](https://github.com/hendrickcastro/MCPQL/graphs/commit-activity)
 
 A comprehensive **Model Context Protocol (MCP)** server for **SQL Server** database operations. This server provides 10 powerful tools for database analysis, object discovery, and data manipulation through the MCP protocol.
 
@@ -466,6 +481,20 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Built with the [Model Context Protocol SDK](https://github.com/modelcontextprotocol/sdk)
 - Uses [mssql](https://github.com/tediousjs/node-mssql) for SQL Server connectivity
 - Comprehensive testing with [Jest](https://jestjs.io/)
+
+## 🏷️ Tags & Keywords
+
+**Database:** `sql-server` `azure-sql` `database-analysis` `database-tools` `mssql` `t-sql` `database-management` `database-administration` `database-operations` `data-analysis`
+
+**MCP & AI:** `model-context-protocol` `mcp-server` `mcp-tools` `ai-tools` `claude-desktop` `cursor-ide` `anthropic` `llm-integration` `ai-database` `intelligent-database`
+
+**Technology:** `typescript` `nodejs` `npm-package` `cli-tool` `database-client` `sql-client` `database-sdk` `rest-api` `json-api` `database-connector`
+
+**Features:** `table-analysis` `stored-procedures` `data-preview` `column-statistics` `query-execution` `database-search` `object-dependencies` `schema-analysis` `data-exploration` `database-insights`
+
+**Deployment:** `docker` `azure-deployment` `cloud-ready` `enterprise-ready` `production-ready` `scalable` `secure` `authenticated` `encrypted` `configurable`
+
+**Use Cases:** `database-development` `data-science` `business-intelligence` `database-migration` `schema-documentation` `performance-analysis` `data-governance` `database-monitoring` `troubleshooting` `automation`
 
 ---
 
