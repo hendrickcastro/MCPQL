@@ -1,72 +1,110 @@
-# MCPQL - SQL Server MCP Proxy
+# MCPQL - SQL Server MCP Server
 
-A comprehensive **Model Context Protocol (MCP)** server for **SQL Server** database operations, providing complete Python-equivalent functionality for database analysis, object discovery, and data manipulation.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen)](https://nodejs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.8.3-blue)](https://www.typescriptlang.org/)
 
-## 🌟 Features
+A comprehensive **Model Context Protocol (MCP)** server for **SQL Server** database operations. This server provides 10 powerful tools for database analysis, object discovery, and data manipulation through the MCP protocol.
 
-### 🏗️ **Core Database Operations**
-- **Query Execution**: Execute custom SQL queries with full error handling
-- **Table Analysis**: Comprehensive table structure analysis including columns, keys, indexes, and constraints
-- **Stored Procedure Analysis**: Complete stored procedure inspection with parameters, dependencies, and source code
-- **Data Preview**: Enhanced data viewing with filtering and formatting capabilities
-
-### 🔍 **ObjectSearch - Database Object Discovery (VERY IMPORTANT)**
-- **Search by Name**: Find database objects by name patterns with type filtering
-- **Search in Definitions**: Search for patterns within object source code/definitions
-- **Search by Type**: List all objects of specific types (tables, procedures, views, functions, triggers)
-- **Dependency Analysis**: Comprehensive dependency tracking for database objects
-- **Comprehensive Search**: Combined name and definition search with detailed results
-
-### 🎨 **QuickView - Data Analysis & Preview**
-- **Enhanced Data Preview**: Formatted data preview with binary data handling
-- **Sample Values**: Get distinct sample values from specific columns
-- **Column Statistics**: Comprehensive column analysis with statistics and sample data
-- **Quick Analysis**: Complete table analysis including preview, column info, and row counts
-
-### 📊 **Advanced Analysis Functions**
-- **TableInfo Class Equivalent**: Complete Python `TableInfo` functionality
-  - Individual granular functions for columns, primary keys, foreign keys, indexes, constraints
-  - All-in-one table analysis function
-- **StoredProcedureStructure Class Equivalent**: Complete Python `StoredProcedureStructure` functionality
-  - Enhanced SP analysis with comprehensive info, parameters, and dependencies
-  - Complete structure analysis using all individual functions
-- **StoredProcedureInfo Class Equivalent**: Complete Python `StoredProcedureInfo` functionality
-  - Simple SP analysis functions matching Python's `get_all_info` method
-
-## 🚀 Installation
+## 🚀 Quick Start
 
 ### Prerequisites
 - Node.js 18+ and npm
 - SQL Server database with appropriate connection credentials
-- MCP-compatible client (like Cursor IDE)
+- MCP-compatible client (like Claude Desktop, Cursor IDE, or any MCP client)
 
-### Setup
-1. **Clone and install dependencies:**
+### Installation Options
+
+#### Option 1: Using npx from GitHub (Recommended)
+No installation needed! Just configure your MCP client to use `npx -y hendrickcastro/mcpql` directly.
+
+#### Option 2: Local Development Installation
+
+1. **Clone the repository:**
 ```bash
-git clone <repository-url>
+git clone https://github.com/hendrickcastro/MCPQL.git
 cd MCPQL
+```
+
+2. **Install dependencies:**
+```bash
 npm install
 ```
 
-2. **Configure database connection:**
-Edit `src/db.ts` with your SQL Server connection details:
-```typescript
-const config: sql.config = {
-  server: 'your-server',
-  database: 'your-database',
-  user: 'your-username',
-  password: 'your-password',
-  // ... other options
-};
+3. **Configure database connection:**
+Copy the example environment file and configure your database:
+```bash
+cp .env.example .env
+# Edit .env with your database credentials
 ```
 
-3. **Build the project:**
+Or set environment variables directly:
+```bash
+export DB_USER="your_username"
+export DB_PASSWORD="your_password"
+export DB_SERVER="your_server"
+export DB_NAME="your_database"
+export DB_PORT="1433"
+export DB_ENCRYPT="true"
+export DB_TRUST_SERVER_CERTIFICATE="false"
+export DB_TIMEOUT="30000"
+```
+
+4. **Build the project:**
 ```bash
 npm run build
 ```
 
-4. **Configure MCP client:**
-Add to your MCP client configuration (e.g., Cursor settings):
+5. **Configure your MCP client:**
+Add to your MCP client configuration:
+
+**For Claude Desktop (`claude_desktop_config.json`):**
+```json
+{
+  "mcpServers": {
+    "mcpql": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "hendrickcastro/mcpql"
+      ],
+      "env": {
+        "DB_USER": "your_username",
+        "DB_PASSWORD": "your_password",
+        "DB_SERVER": "your_server",
+        "DB_NAME": "your_database",
+        "DB_PORT": "1433",
+        "DB_ENCRYPT": "true",
+        "DB_TRUST_SERVER_CERTIFICATE": "false"
+      }
+    }
+  }
+}
+```
+
+**For Cursor IDE:**
+```json
+{
+  "mcpServers": {
+    "mcpql": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "hendrickcastro/mcpql"
+      ],
+      "env": {
+        "DB_USER": "your_username",
+        "DB_PASSWORD": "your_password",
+        "DB_SERVER": "your_server",
+        "DB_NAME": "your_database"
+      }
+    }
+  }
+}
+```
+
+**Alternative: Using local installation**
+If you prefer to use a local installation instead of npx:
 ```json
 {
   "mcpServers": {
@@ -78,196 +116,233 @@ Add to your MCP client configuration (e.g., Cursor settings):
 }
 ```
 
+## 🔧 Using with npx from GitHub
+
+The easiest way to use MCPQL is with npx directly from GitHub. No installation required!
+
+### Configuration for npx usage:
+
+**For Claude Desktop:**
+```json
+{
+  "mcpServers": {
+    "mcpql": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "hendrickcastro/mcpql"
+      ],
+      "env": {
+        "DB_USER": "your_username",
+        "DB_PASSWORD": "your_password",
+        "DB_SERVER": "your_server",
+        "DB_NAME": "your_database"
+      }
+    }
+  }
+}
+```
+
+**For Cursor IDE:**
+```json
+{
+  "mcpServers": {
+    "mcpql": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "hendrickcastro/mcpql"
+      ],
+      "env": {
+        "DB_USER": "your_username",
+        "DB_PASSWORD": "your_password",
+        "DB_SERVER": "your_server",
+        "DB_NAME": "your_database"
+      }
+    }
+  }
+}
+```
+
 ## 🛠️ Available Tools
 
-### 🔍 **ObjectSearch Functions** (VERY IMPORTANT for Database Discovery)
+MCPQL provides 10 comprehensive tools for SQL Server database operations:
 
-#### `mcp_search_objects_by_name`
-Search database objects by name pattern with optional type filtering.
+### 1. 🏗️ **Table Analysis** - `mcp_table_analysis`
+Complete table structure analysis including columns, keys, indexes, and constraints.
 ```typescript
-// Find all objects containing "User" in the name
-mcp_search_objects_by_name({ 
-  pattern: "User",
-  object_types: ["U", "P"] // Tables and Procedures only
+// Example usage in MCP client
+mcp_table_analysis({
+  table_name: "dbo.Users"
 })
 ```
 
-#### `mcp_search_in_definitions`
-Search for patterns within object definitions/source code.
+### 2. 📋 **Stored Procedure Analysis** - `mcp_sp_structure`
+Analyze stored procedure structure including parameters, dependencies, and source code.
 ```typescript
-// Find all procedures containing "SELECT * FROM Users"
-mcp_search_in_definitions({ 
-  pattern: "SELECT * FROM Users",
-  object_types: ["P"] // Procedures only
+mcp_sp_structure({
+  sp_name: "dbo.usp_GetUserData"
 })
 ```
 
-#### `mcp_search_objects_by_type`
-List all objects of a specific type.
+### 3. 👀 **Data Preview** - `mcp_preview_data`
+Preview table data with optional filtering and row limits.
 ```typescript
-// Get all tables in the database
-mcp_search_objects_by_type({ 
-  object_type: "TABLE" 
-})
-```
-
-#### `mcp_get_object_dependencies`
-Get comprehensive dependencies for a database object.
-```typescript
-// Get all dependencies for a specific procedure
-mcp_get_object_dependencies({ 
-  object_name: "[dbo].[usp_GetUserData]" 
-})
-```
-
-#### `mcp_search_comprehensive`
-Perform comprehensive search in both names and definitions.
-```typescript
-// Search for "Customer" in both names and definitions
-mcp_search_comprehensive({ 
-  pattern: "Customer",
-  search_in_names: true,
-  search_in_definitions: true,
-  object_types: ["U", "P", "V"] // Tables, Procedures, Views
-})
-```
-
-### 🎨 **QuickView Functions** (Enhanced Data Analysis)
-
-#### `mcp_preview_data_enhanced`
-Enhanced data preview with better formatting and binary data handling.
-```typescript
-// Preview table data with filters
-mcp_preview_data_enhanced({ 
-  table_name: "[dbo].[Users]",
+mcp_preview_data({
+  table_name: "dbo.Users",
   filters: { "Status": "Active" },
   limit: 50
 })
 ```
 
-#### `mcp_get_sample_values`
-Get distinct sample values from a specific column.
+### 4. 📊 **Column Statistics** - `mcp_get_column_stats`
+Get comprehensive statistics for a specific column.
 ```typescript
-// Get sample values from a column
-mcp_get_sample_values({ 
-  table_name: "[dbo].[Users]",
+mcp_get_column_stats({
+  table_name: "dbo.Users",
+  column_name: "Age"
+})
+```
+
+### 5. ⚙️ **Execute Stored Procedure** - `mcp_execute_procedure`
+Execute stored procedures with parameters and return results.
+```typescript
+mcp_execute_procedure({
+  sp_name: "dbo.usp_GetUserById",
+  params: { "UserId": 123 }
+})
+```
+
+### 6. 🔍 **Execute SQL Query** - `mcp_execute_query`
+Execute custom SQL queries with full error handling.
+```typescript
+mcp_execute_query({
+  query: "SELECT TOP 10 * FROM [dbo].[Users] WHERE [Status] = 'Active'"
+})
+```
+
+### 7. ⚡ **Quick Data Analysis** - `mcp_quick_data_analysis`
+Quick statistical analysis including row count, column distributions, and top values.
+```typescript
+mcp_quick_data_analysis({
+  table_name: "dbo.Users",
+  sample_size: 1000
+})
+```
+
+### 8. 🔎 **Comprehensive Search** - `mcp_search_comprehensive`
+Search across database objects by name and definition with configurable criteria.
+```typescript
+mcp_search_comprehensive({
+  pattern: "User",
+  object_types: ["TABLE", "VIEW", "PROCEDURE"],
+  search_in_names: true,
+  search_in_definitions: true
+})
+```
+
+### 9. 🔗 **Object Dependencies** - `mcp_get_dependencies`
+Get dependencies for database objects (tables, views, stored procedures, etc.).
+```typescript
+mcp_get_dependencies({
+  object_name: "dbo.Users"
+})
+```
+
+### 10. 🎯 **Sample Values** - `mcp_get_sample_values`
+Get sample values from a specific column in a table.
+```typescript
+mcp_get_sample_values({
+  table_name: "dbo.Users",
   column_name: "Department",
   limit: 10
 })
 ```
 
-#### `mcp_get_column_stats_enhanced`
-Get comprehensive column statistics including sample values.
+## 🎯 Object Type Reference
+
+When using search functions, you can filter by these object types:
+
+- **TABLE** - Database tables
+- **VIEW** - Database views
+- **PROCEDURE** - Stored procedures
+- **FUNCTION** - User-defined functions
+- **TRIGGER** - Database triggers
+- **DEFAULT** - Default constraints
+- **CHECK** - Check constraints
+- **RULE** - Rules
+
+## 📋 Usage Examples
+
+### Analyzing a Table
 ```typescript
-// Get detailed statistics for a column
-mcp_get_column_stats_enhanced({ 
-  table_name: "[dbo].[Users]",
-  column_name: "Age"
-})
+// Get complete table structure
+const analysis = await mcp_table_analysis({ 
+  table_name: "dbo.Users" 
+});
+
+// Get quick data overview
+const overview = await mcp_quick_data_analysis({ 
+  table_name: "dbo.Users",
+  sample_size: 500
+});
+
+// Preview table data with filters
+const data = await mcp_preview_data({
+  table_name: "dbo.Users",
+  filters: { "Status": "Active", "Department": "IT" },
+  limit: 25
+});
 ```
-
-#### `mcp_quick_data_analysis`
-Quick comprehensive data analysis including preview, column info, and row count.
-```typescript
-// Get complete table overview
-mcp_quick_data_analysis({ 
-  table_name: "[dbo].[Users]",
-  limit: 100
-})
-```
-
-### 📊 **Core Database Functions**
-
-#### Table Analysis Functions (Python TableInfo Equivalent)
-- `mcp_table_analysis` - Complete table structure analysis
-- `mcp_get_columns` - Detailed column information
-- `mcp_get_primary_keys` - Primary key constraints
-- `mcp_get_foreign_keys` - Foreign key relationships
-- `mcp_get_indexes` - Index information
-- `mcp_get_constraints` - Check and default constraints
-- `mcp_get_all_table_info` - Complete table analysis in one call
-
-#### Stored Procedure Analysis Functions
-
-**StoredProcedureStructure Equivalent (Enhanced):**
-- `mcp_sp_structure` - Enhanced SP analysis
-- `mcp_get_sp_info` - Basic SP information
-- `mcp_get_sp_parameters` - Detailed parameter info
-- `mcp_get_sp_dependencies` - Enhanced dependency analysis
-- `mcp_get_sp_definition` - Complete source code
-- `mcp_get_sp_complete_structure` - All-in-one comprehensive analysis
-
-**StoredProcedureInfo Equivalent (Simple):**
-- `mcp_get_sp_definition_simple` - Simple definition retrieval
-- `mcp_get_sp_parameters_simple` - Basic parameter information
-- `mcp_get_sp_dependencies_simple` - Simple dependencies
-- `mcp_get_sp_all_info_simple` - All info in one call (matches Python's `get_all_info`)
-
-#### Data Operations
-- `mcp_execute_query` - Execute custom SQL queries
-- `mcp_preview_data` - Basic data preview with filtering
-- `mcp_execute_procedure` - Execute stored procedures with parameters
-- `mcp_get_dependencies` - Get object dependencies
-- `mcp_get_column_stats` - Basic column statistics
-
-## 🎯 **Object Type Codes**
-- **U** = Table (User Table)
-- **P** = Stored Procedure
-- **V** = View
-- **FN** = Scalar Function
-- **IF** = Inline Table Function
-- **TF** = Table Function
-- **TR** = Trigger
-
-## 📋 **Usage Examples**
 
 ### Finding Database Objects
 ```typescript
-// Find all user-related objects
-const objects = await mcp_search_objects_by_name({ 
-  pattern: "User" 
+// Find all objects containing "User"
+const objects = await mcp_search_comprehensive({ 
+  pattern: "User",
+  search_in_names: true,
+  search_in_definitions: false
 });
 
 // Find procedures that query a specific table
-const procedures = await mcp_search_in_definitions({ 
+const procedures = await mcp_search_comprehensive({ 
   pattern: "FROM Users",
-  object_types: ["P"]
-});
-
-// Get all tables in the database
-const tables = await mcp_search_objects_by_type({ 
-  object_type: "TABLE" 
+  object_types: ["PROCEDURE"],
+  search_in_definitions: true
 });
 ```
 
-### Analyzing Table Structure
+### Analyzing Stored Procedures
 ```typescript
-// Complete table analysis
-const analysis = await mcp_get_all_table_info({ 
-  table_name: "[dbo].[Users]" 
+// Get complete stored procedure analysis
+const spAnalysis = await mcp_sp_structure({ 
+  sp_name: "dbo.usp_GetUserData" 
 });
 
-// Quick data overview
-const overview = await mcp_quick_data_analysis({ 
-  table_name: "[dbo].[Users]",
-  limit: 50
+// Execute a stored procedure
+const result = await mcp_execute_procedure({
+  sp_name: "dbo.usp_GetUserById",
+  params: { "UserId": 123, "IncludeDetails": true }
 });
 ```
 
-### Stored Procedure Analysis
+### Data Analysis
 ```typescript
-// Complete SP analysis
-const spAnalysis = await mcp_get_sp_complete_structure({ 
-  sp_name: "[dbo].[usp_GetUserData]" 
+// Get column statistics
+const stats = await mcp_get_column_stats({
+  table_name: "dbo.Users",
+  column_name: "Age"
 });
 
-// Simple SP info (Python style)
-const spInfo = await mcp_get_sp_all_info_simple({ 
-  sp_name: "[dbo].[usp_GetUserData]" 
+// Get sample values from a column
+const samples = await mcp_get_sample_values({
+  table_name: "dbo.Users",
+  column_name: "Department",
+  limit: 15
 });
 ```
 
-## 🧪 **Testing**
+## 🧪 Testing
 
 Run the comprehensive test suite:
 ```bash
@@ -275,114 +350,108 @@ npm test
 ```
 
 The test suite includes:
-- ✅ **26 passing tests** covering all functionality
-- 🎨 **Beautiful formatted output** with tables, colors, and emojis
+- ✅ **Comprehensive testing** of all 10 tools
+- 🎨 **Beautiful formatted output** with tables and colors
 - 📊 **Real database testing** with actual SQL Server data
-- 🔍 **ObjectSearch testing** for all search functions
-- 🎨 **QuickView testing** for enhanced data analysis
-- 📋 **Complete coverage** of Python equivalents
+- 🔍 **Complete coverage** of all functionality
 
-## 🏗️ **Architecture**
+## 🏗️ Architecture
 
-### File Structure
+### Project Structure
 ```
 MCPQL/
 ├── src/
 │   ├── __tests__/          # Comprehensive test suite
-│   ├── db.ts              # Database connection management
-│   ├── mcp-server.ts      # All MCP tool implementations
-│   ├── server.ts          # MCP server setup and handlers
-│   ├── tools.ts           # Tool definitions and schemas
-│   └── utils.ts           # Utility functions
-├── dist/                  # Compiled JavaScript output
-└── package.json          # Dependencies and scripts
+│   ├── tools/              # Modular tool implementations
+│   │   ├── tableAnalysis.ts      # Table analysis tools
+│   │   ├── storedProcedureAnalysis.ts  # SP analysis tools
+│   │   ├── dataOperations.ts     # Data operation tools
+│   │   ├── objectSearch.ts       # Search and discovery tools
+│   │   ├── types.ts              # Type definitions
+│   │   └── index.ts              # Tool exports
+│   ├── db.ts               # Database connection management
+│   ├── server.ts           # MCP server setup and handlers
+│   ├── tools.ts            # Tool definitions and schemas
+│   └── mcp-server.ts       # Tool re-exports
+├── dist/                   # Compiled JavaScript output
+├── doc/                    # Documentation
+└── package.json           # Dependencies and scripts
 ```
 
 ### Key Components
 - **MCP Server**: Handles tool registration and execution
-- **Database Layer**: SQL Server connection and query execution
-- **Tool Handlers**: Individual function implementations
+- **Database Layer**: SQL Server connection and query execution with connection pooling
+- **Tool Modules**: Modular implementations for different functionality areas
 - **Type Safety**: Full TypeScript support with proper error handling
 
-## 🔧 **Development**
+## 🔧 Development
 
-### Building
+### Development Commands
 ```bash
+# Development mode
+npm run start
+
+# Build project
 npm run build
-```
 
-### Cleaning
-```bash
+# Clean build artifacts
 npm run clean
+
+# Run tests
+npm test
 ```
 
-### Development Scripts
-```bash
-npm run dev     # Development mode
-npm run test    # Run tests
-npm run lint    # Code linting
-```
+### Environment Variables
+All database connection parameters are configurable via environment variables:
 
-## 🎯 **Python Compatibility**
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `DB_USER` | Database username | Required |
+| `DB_PASSWORD` | Database password | Required |
+| `DB_SERVER` | SQL Server hostname/IP | Required |
+| `DB_NAME` | Database name | Required |
+| `DB_PORT` | SQL Server port | 1433 |
+| `DB_ENCRYPT` | Enable encryption | false |
+| `DB_TRUST_SERVER_CERTIFICATE` | Trust server certificate | false |
+| `DB_TIMEOUT` | Connection timeout (ms) | 30000 |
 
-This implementation provides **complete feature parity** with Python versions:
+## 🚀 Performance Features
 
-### ✅ **TableInfo Class** - Complete Implementation
-- All individual functions (columns, primary keys, foreign keys, indexes, constraints)
-- All-in-one analysis function
-- Enhanced metadata and formatted output
-
-### ✅ **StoredProcedureStructure Class** - Complete Implementation  
-- Enhanced SP analysis with comprehensive info, parameters, and dependencies
-- Complete structure analysis using all individual functions
-- Parallel query execution for optimal performance
-
-### ✅ **StoredProcedureInfo Class** - Complete Implementation
-- Simple SP analysis functions
-- Matches Python's `get_all_info` method exactly
-- Basic parameter and dependency information
-
-### ✅ **QuickView Class** - Complete Implementation
-- Enhanced data preview with formatting and binary data handling
-- Sample values extraction
-- Comprehensive column statistics with sample data
-- Quick data analysis combining multiple metrics
-
-### ✅ **ObjectSearch Class** - Complete Implementation (VERY IMPORTANT)
-- Search by name patterns with type filtering
-- Search within object definitions/source code
-- Search by object type
-- Comprehensive dependency analysis
-- Combined search functionality
-
-## 🚀 **Performance Features**
-
-- ⚡ **Parallel Query Execution**: Multiple queries run simultaneously for optimal speed
+- ⚡ **Connection Pooling**: Efficient database connection management
 - 🛡️ **Robust Error Handling**: Comprehensive error handling and validation
 - 📋 **Rich Metadata**: Detailed results with comprehensive database information
-- 🔧 **Flexible Options**: Both individual functions and all-in-one analysis
-- 📊 **Formatted Output**: Beautiful tables, colors, and emojis in test results
+- 🔧 **Flexible Configuration**: Environment-based configuration
+- 📊 **Optimized Queries**: Efficient SQL queries for all operations
 
-## 📝 **Notes**
+## 📝 Important Notes
 
-- **Object Names**: Always use bracketed, schema-qualified names like `[schema].[object]`
-- **Error Handling**: All functions return `{success: boolean, data?: any, error?: string}`
+- **Object Names**: Always use schema-qualified names (e.g., `dbo.Users`, `api.Idiomas`)
+- **Error Handling**: All tools return structured responses with success/error indicators
 - **Type Safety**: Full TypeScript support with proper type definitions
-- **Testing**: Comprehensive test suite with 26 tests covering all functionality
-- **Compatibility**: Complete Python feature parity for all classes
+- **Connection Management**: Automatic connection pooling and retry logic
+- **Security**: Parameterized queries to prevent SQL injection
 
-## 🤝 **Contributing**
+## 🤝 Contributing
 
 1. Fork the repository
-2. Create a feature branch
-3. Add tests for new functionality
-4. Ensure all tests pass
-5. Submit a pull request
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Make your changes
+4. Add tests for new functionality
+5. Ensure all tests pass (`npm test`)
+6. Commit your changes (`git commit -m 'Add amazing feature'`)
+7. Push to the branch (`git push origin feature/amazing-feature`)
+8. Open a Pull Request
 
-## 📄 **License**
+## 📄 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- Built with the [Model Context Protocol SDK](https://github.com/modelcontextprotocol/sdk)
+- Uses [mssql](https://github.com/tediousjs/node-mssql) for SQL Server connectivity
+- Comprehensive testing with [Jest](https://jestjs.io/)
 
 ---
 
-**🎯 Key Highlight**: This implementation provides **complete Python equivalence** for SQL Server database analysis, with enhanced search capabilities through the **ObjectSearch class** (very important for database object discovery) and improved data analysis through the **QuickView class**. All 26 tests pass with beautiful formatted output! 🚀
+**🎯 MCPQL provides comprehensive SQL Server database analysis and manipulation capabilities through the Model Context Protocol. Perfect for database administrators, developers, and anyone working with SQL Server databases!** 🚀

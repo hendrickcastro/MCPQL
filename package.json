@@ -1,25 +1,45 @@
 {
   "name": "mcpql",
   "version": "1.0.0",
-  "description": "MCPQL",
+  "description": "MCPQL - SQL Server MCP Server for database analysis and operations",
   "type": "module",
   "main": "dist/server.js",
   "bin": {
     "mcpql": "./dist/server.js"
   },
   "files": [
-    "dist/**/*"
+    "dist/**/*",
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
     "clean": "rimraf dist",
     "start": "ts-node src/server.ts",
     "build": "npm run clean && tsc",
     "prepublishOnly": "npm run build",
-    "test": "npm run build && jest"
+    "test": "npm run build && jest",
+    "prepare": "npm run build"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "sql-server",
+    "database",
+    "analysis",
+    "typescript",
+    "cursor",
+    "claude"
+  ],
+  "author": "hendrickcastro",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hendrickcastro/MCPQL.git"
+  },
+  "homepage": "https://github.com/hendrickcastro/MCPQL",
+  "bugs": {
+    "url": "https://github.com/hendrickcastro/MCPQL/issues"
+  },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.13.1",
     "dotenv": "^16.5.0",
@@ -37,5 +57,8 @@
     "ts-jest": "^29.4.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
