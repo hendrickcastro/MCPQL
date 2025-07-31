@@ -1,27 +1,126 @@
 import { getPool } from '../db.js';
 import { normalizeSqlObjectName } from '../utils.js';
 import { ToolResult } from './types.js';
+import { 
+  analyzeQuery, 
+  estimateImpact, 
+  logSecurityEvent, 
+  createConfirmationPrompt,
+  generateConfirmationToken,
+  storePendingOperation,
+  createSecurityConfirmationMessage,
+  getPendingOperation,
+  removePendingOperation
+} from './securityUtils.js';
 
 /**
- * Execute a SQL Server stored procedure with parameters and return results
+ * Execute a SQL Server stored procedure with security mechanisms
  */
-export const mcp_execute_procedure = async (args: { sp_name: string; params?: object }): Promise<ToolResult<any[]>> => {
+export const mcp_execute_procedure = async (args: { 
+  sp_name: string; 
+  params?: object;
+}): Promise<ToolResult<any[]>> => {
   const { sp_name, params } = args;
   console.log('Executing mcp_execute_procedure with:', args);
 
+  const timestamp = new Date();
+  
   try {
-    const pool = getPool();
-    const request = pool.request();
+    // For stored procedures, we assume they might modify data and require confirmation
+    // unless they are clearly read-only (e.g., start with "usp_Get", "usp_Select", etc.)
+    const isReadOnlyProcedure = /^(usp_Get|usp_Select|usp_Search|usp_Find|usp_List|usp_View)/i.test(sp_name);
+    
+    // If it's a read-only procedure, execute directly
+    if (isReadOnlyProcedure) {
+      const pool = getPool();
+      const request = pool.request();
 
-    if (params) {
-      for (const [key, value] of Object.entries(params)) {
-        request.input(key, value);
+      if (params) {
+        for (const [key, value] of Object.entries(params)) {
+          request.input(key, value);
+        }
       }
-    }
 
-    const result = await request.execute(sp_name);
-    return { success: true, data: result.recordset };
+      const result = await request.execute(sp_name);
+      
+      logSecurityEvent({
+        timestamp,
+        operation: 'EXECUTE',
+        sql: `EXEC ${sp_name}`,
+        riskLevel: 'LOW',
+        userConfirmed: false,
+        result: 'SUCCESS'
+      });
+      
+      return { success: true, data: result.recordset };
+    }
+    
+    // For write procedures, generate token and require confirmation
+    const token = generateConfirmationToken();
+    
+    // Store the pending operation
+    storePendingOperation(token, {
+      sql: `EXEC ${sp_name}`,
+      operation: 'STORED_PROCEDURE',
+      riskLevel: 'MEDIUM',
+      estimatedRows: 0,
+      affectedTables: ['Unknown - Stored Procedure'],
+      spName: sp_name,
+      params: params
+    });
+    
+    // Create analysis for logging
+    const analysis = {
+      operation: 'EXECUTE',
+      riskLevel: 'MEDIUM' as const,
+      requiresConfirmation: true,
+      reason: 'Stored procedure execution may modify data'
+    };
+    
+    const impact = {
+      estimatedRows: 0,
+      affectedTables: ['Unknown - Stored Procedure'],
+      riskFactors: ['Stored procedure execution may modify data']
+    };
+    
+    // Log the security event as pending
+    logSecurityEvent({
+      timestamp: timestamp,
+      operation: analysis.operation,
+      sql: `EXEC ${sp_name}`,
+      riskLevel: analysis.riskLevel,
+      userConfirmed: false,
+      estimatedRows: impact.estimatedRows,
+      affectedTables: impact.affectedTables,
+      result: 'CANCELLED',
+      error: 'Pending user confirmation'
+    });
+    
+    // Return confirmation message instead of executing
+    const confirmationMessage = createSecurityConfirmationMessage(
+      analysis,
+      impact,
+      token,
+      `EXEC ${sp_name}${params ? ` WITH PARAMS: ${JSON.stringify(params)}` : ''}`
+    );
+    
+    return {
+      success: false,
+      error: `SECURITY_CONFIRMATION_REQUIRED: ${confirmationMessage}\n\nTo proceed, use the mcp_confirm_and_execute tool with token: ${token}`
+    };
+
   } catch (error: any) {
+    // Log failed execution
+    logSecurityEvent({
+      timestamp: timestamp,
+      operation: 'EXECUTE',
+      sql: `EXEC ${sp_name}`,
+      riskLevel: 'MEDIUM',
+      userConfirmed: false,
+      result: 'FAILED',
+      error: error.message
+    });
+    
     console.error(`Error in mcp_execute_procedure for SP ${sp_name}: ${error.message}`);
     return { success: false, error: error.message };
   }
@@ -59,17 +158,89 @@ export const mcp_preview_data = async (args: { table_name: string; filters?: obj
 };
 
 /**
- * Execute a raw SQL query
+ * Execute a raw SQL query with security mechanisms
  */
-export const mcp_execute_query = async (args: { query: string }): Promise<ToolResult<any[]>> => {
+export const mcp_execute_query = async (args: { 
+  query: string; 
+}): Promise<ToolResult<any[]>> => {
   const { query } = args;
   console.log('Executing mcp_execute_query with query:', query);
+  
+  const timestamp = new Date();
+  
   try {
+    // Analyze the query for security implications
+    const analysis = analyzeQuery(query);
+    
+    // If it's a read-only operation, execute directly
+    if (!analysis.requiresConfirmation) {
+      logSecurityEvent({
+        timestamp,
+        operation: analysis.operation,
+        sql: query,
+        riskLevel: analysis.riskLevel,
+        userConfirmed: false,
+        result: 'SUCCESS'
+      });
+      
+      const pool = getPool();
+      const result = await pool.request().query(query);
+      return { success: true, data: result.recordset };
+    }
+    
+    // For write operations, generate token and require confirmation
     const pool = getPool();
-    const result = await pool.request().query(query);
-    return { success: true, data: result.recordset };
+    const impact = await estimateImpact(query, pool);
+    const token = generateConfirmationToken();
+    
+    // Store the pending operation
+    storePendingOperation(token, {
+      sql: query,
+      operation: analysis.operation,
+      riskLevel: analysis.riskLevel,
+      estimatedRows: impact.estimatedRows,
+      affectedTables: impact.affectedTables
+    });
+    
+    // Log the security event as pending
+    logSecurityEvent({
+      timestamp,
+      operation: analysis.operation,
+      sql: query,
+      riskLevel: analysis.riskLevel,
+      userConfirmed: false,
+      estimatedRows: impact.estimatedRows,
+      affectedTables: impact.affectedTables,
+      result: 'CANCELLED',
+      error: 'Pending user confirmation'
+    });
+    
+    // Return confirmation message instead of executing
+    const confirmationMessage = createSecurityConfirmationMessage(
+      analysis,
+      impact,
+      token,
+      query
+    );
+    
+    return {
+      success: false,
+      error: `SECURITY_CONFIRMATION_REQUIRED: ${confirmationMessage}\n\nTo proceed, use the mcp_confirm_and_execute tool with token: ${token}`
+    };
+    
   } catch (error: any) {
-    // Only log the error message, not the full stack trace for cleaner output
+    // Log failed execution
+    const analysis = analyzeQuery(query);
+    logSecurityEvent({
+      timestamp: timestamp,
+      operation: analysis.operation,
+      sql: query,
+      riskLevel: analysis.riskLevel,
+      userConfirmed: false,
+      result: 'FAILED',
+      error: error.message
+    });
+    
     console.error(`Error in mcp_execute_query: ${error.message}`);
     return { success: false, error: error.message };
   }
@@ -344,6 +515,91 @@ export const mcp_quick_data_analysis = async (args: {
     };
   } catch (error: any) {
     console.error(`Error in mcp_quick_data_analysis: ${error.message}`);
+    return { success: false, error: error.message };
+  }
+};
+
+/**
+ * Confirm and execute a previously analyzed operation using a confirmation token
+ */
+export const mcp_confirm_and_execute = async (args: {
+  confirmation_token: string
+}): Promise<ToolResult<any>> => {
+  const { confirmation_token } = args;
+  console.log('Executing mcp_confirm_and_execute with token:', confirmation_token);
+
+  try {
+    // Get the pending operation
+    const pendingOp = getPendingOperation(confirmation_token);
+    
+    if (!pendingOp) {
+      return {
+        success: false,
+        error: 'Invalid or expired confirmation token. Please generate a new analysis.'
+      };
+    }
+
+    const { sql, operation, spName, params } = pendingOp;
+    const pool = getPool();
+    let result;
+
+    // Execute based on operation type
+    if (operation === 'STORED_PROCEDURE') {
+      const request = pool.request();
+      
+      // Add parameters if provided
+      if (params && typeof params === 'object') {
+        Object.entries(params).forEach(([key, value]) => {
+          request.input(key, value);
+        });
+      }
+      
+      // Use spName for stored procedure execution
+      result = await request.execute(spName || sql);
+    } else {
+      // Regular SQL query
+      result = await pool.request().query(sql);
+    }
+
+    // Remove the pending operation
+    removePendingOperation(confirmation_token);
+
+    // Log successful execution
+    const analysis = analyzeQuery(sql);
+    const impact = await estimateImpact(sql, pool);
+    logSecurityEvent({
+      timestamp: new Date(),
+      operation: analysis.operation,
+      sql: sql,
+      riskLevel: analysis.riskLevel,
+      userConfirmed: true,
+      estimatedRows: impact.estimatedRows,
+      affectedTables: impact.affectedTables,
+      result: 'SUCCESS'
+    });
+
+    return {
+      success: true,
+      data: {
+        rowsAffected: result.rowsAffected?.[0] || 0,
+        recordset: result.recordset || [],
+        message: `Operation executed successfully. ${result.rowsAffected?.[0] || 0} rows affected.`
+      }
+    };
+
+  } catch (error: any) {
+    // Log failed execution
+    logSecurityEvent({
+      timestamp: new Date(),
+      operation: 'UNKNOWN',
+      sql: 'FAILED_CONFIRMATION',
+      riskLevel: 'HIGH',
+      userConfirmed: true,
+      result: 'FAILED',
+      error: error.message
+    });
+
+    console.error(`Error in mcp_confirm_and_execute: ${error.message}`);
     return { success: false, error: error.message };
   }
 };

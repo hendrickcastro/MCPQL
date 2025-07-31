@@ -425,6 +425,34 @@ npm test
 
 The test suite includes comprehensive testing of all 10 tools with real database testing and complete coverage.
 
+## 🔄 Recent Updates
+
+### Version 1.1.0 - Parameter Fixes & Improvements (December 2024)
+
+We've recently completed a comprehensive review and fix of parameter handling in `dataOperations.ts`. This update resolves all TypeScript compilation errors and improves the reliability of database operations.
+
+#### 🔧 Key Improvements:
+- ✅ **Fixed parameter validation** - Removed unused parameters and corrected function signatures
+- ✅ **Enhanced security logging** - Corrected timestamp handling and parameter types
+- ✅ **Improved error handling** - Better parameter validation for security functions
+- ✅ **Code quality** - Eliminated TypeScript compilation errors
+- ✅ **Better maintainability** - Consistent parameter handling across all functions
+
+#### 📋 Specific Fixes:
+- Removed unused `user_confirmation` parameter from `mcp_execute_query`
+- Fixed function reference from `mcp_confirm_operation` to `mcp_confirm_and_execute`
+- Corrected timestamp parameters in security logging (Date objects vs strings)
+- Added missing parameters to `estimateImpact` and `analyzeQuery` functions
+- Fixed property references in `mcp_confirm_and_execute` function
+- Improved data type consistency for `estimatedRows` and other parameters
+
+#### 📚 Documentation:
+- **Detailed technical documentation**: `_Guide/DATAOPERATIONS_FIXES_v1.md`
+- **Project changelog**: `_Guide/CHANGELOG.md`
+- **Verification commands**: All changes verified with TypeScript compiler
+
+These improvements ensure more reliable database operations and better error handling while maintaining full backward compatibility.
+
 ## 🏗️ Architecture
 
 ### Project Structure

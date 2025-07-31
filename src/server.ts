@@ -118,6 +118,9 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
             case 'mcp_search_comprehensive':
                 result = await toolHandlers.mcp_search_comprehensive(input as any);
                 break;
+            case 'mcp_confirm_and_execute':
+                result = await toolHandlers.mcp_confirm_and_execute(input as any);
+                break;
             default:
                 result = await handler(input);
         }
