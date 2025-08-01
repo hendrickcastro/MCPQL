@@ -54,17 +54,17 @@ export function validateModificationPermission(operation: string): { allowed: bo
   if (!SECURITY_CONFIG.ALLOW_MODIFICATIONS) {
     return {
       allowed: false,
-      message: `🚫 OPERACIÓN BLOQUEADA: Las modificaciones en la base de datos están deshabilitadas por seguridad.
+      message: `[X] OPERATION BLOCKED: Database modifications are disabled for security.
 
-📋 OPERACIÓN SOLICITADA: ${operation}
+[*] REQUESTED OPERATION: ${operation}
 
-🔧 PARA HABILITAR MODIFICACIONES:
-Configura la variable de entorno: DB_ALLOW_MODIFICATIONS=true
+[+] TO ENABLE MODIFICATIONS:
+Configure the environment variable: DB_ALLOW_MODIFICATIONS=true
 
-⚠️  ADVERTENCIA: Solo habilita modificaciones si estás seguro de que es seguro hacerlo.
-En entornos de producción, mantén esta configuración en 'false' para prevenir cambios accidentales.
+[!] WARNING: Only enable modifications if you are sure it is safe to do so.
+In production environments, keep this setting as 'false' to prevent accidental changes.
 
-🔒 CONFIGURACIÓN ACTUAL:
+[#] CURRENT CONFIGURATION:
 - DB_ALLOW_MODIFICATIONS: ${SECURITY_CONFIG.ALLOW_MODIFICATIONS}
 - DB_ALLOW_STORED_PROCEDURES: ${SECURITY_CONFIG.ALLOW_STORED_PROCEDURES}`
     };
@@ -80,22 +80,22 @@ export function validateStoredProcedurePermission(spName: string): { allowed: bo
   if (!SECURITY_CONFIG.ALLOW_STORED_PROCEDURES) {
     return {
       allowed: false,
-      message: `🚫 EJECUCIÓN BLOQUEADA: La ejecución de stored procedures está deshabilitada por seguridad.
+      message: `[X] EXECUTION BLOCKED: Stored procedure execution is disabled for security.
 
-📋 STORED PROCEDURE SOLICITADO: ${spName}
+[*] REQUESTED STORED PROCEDURE: ${spName}
 
-🔧 PARA HABILITAR STORED PROCEDURES:
-Configura la variable de entorno: DB_ALLOW_STORED_PROCEDURES=true
+[+] TO ENABLE STORED PROCEDURES:
+Configure the environment variable: DB_ALLOW_STORED_PROCEDURES=true
 
-⚠️  ADVERTENCIA: Los stored procedures pueden realizar modificaciones en la base de datos.
-Solo habilita esta función si estás seguro de que es seguro hacerlo.
+[!] WARNING: Stored procedures can perform database modifications.
+Only enable this function if you are sure it is safe to do so.
 
-🔒 CONFIGURACIÓN ACTUAL:
+[#] CURRENT CONFIGURATION:
 - DB_ALLOW_MODIFICATIONS: ${SECURITY_CONFIG.ALLOW_MODIFICATIONS}
 - DB_ALLOW_STORED_PROCEDURES: ${SECURITY_CONFIG.ALLOW_STORED_PROCEDURES}
 
-💡 ALTERNATIVA SEGURA:
-Puedes usar 'mcp_sp_structure' para analizar el stored procedure sin ejecutarlo.`
+[i] SAFE ALTERNATIVE:
+You can use 'mcp_sp_structure' to analyze the stored procedure without executing it.`
     };
   }
   
@@ -107,13 +107,13 @@ Puedes usar 'mcp_sp_structure' para analizar el stored procedure sin ejecutarlo.
  */
 export function validateQueryPermission(query: string): { allowed: boolean; message?: string } {
   if (!query) {
-    return { allowed: false, message: 'Query vacío o inválido' };
+    return { allowed: false, message: 'Empty or invalid query' };
   }
 
   const hasModifications = containsModificationOperations(query);
   
   if (hasModifications) {
-    return validateModificationPermission(`Consulta SQL: ${query.substring(0, 100)}...`);
+    return validateModificationPermission(`SQL Query: ${query.substring(0, 100)}...`);
   }
   
   return { allowed: true };
@@ -131,23 +131,23 @@ export function getSecurityStatus(): {
   const modifications = SECURITY_CONFIG.ALLOW_MODIFICATIONS;
   const storedProcs = SECURITY_CONFIG.ALLOW_STORED_PROCEDURES;
   
-  let securityLevel = 'MÁXIMA';
+  let securityLevel = 'MAXIMUM';
   let recommendations: string[] = [];
   
   if (modifications && storedProcs) {
-    securityLevel = 'BAJA';
-    recommendations.push('⚠️  Considera deshabilitar modificaciones en producción');
-    recommendations.push('⚠️  Considera deshabilitar stored procedures en producción');
+    securityLevel = 'LOW';
+    recommendations.push('[!] Consider disabling modifications in production');
+    recommendations.push('[!] Consider disabling stored procedures in production');
   } else if (modifications || storedProcs) {
-    securityLevel = 'MEDIA';
+    securityLevel = 'MEDIUM';
     if (modifications) {
-      recommendations.push('⚠️  Las modificaciones están habilitadas - usa con precaución');
+      recommendations.push('[!] Modifications are enabled - use with caution');
     }
     if (storedProcs) {
-      recommendations.push('⚠️  Los stored procedures están habilitados - usa con precaución');
+      recommendations.push('[!] Stored procedures are enabled - use with caution');
     }
   } else {
-    recommendations.push('✅ Configuración de seguridad óptima para producción');
+    recommendations.push('[OK] Optimal security configuration for production');
   }
   
   return {

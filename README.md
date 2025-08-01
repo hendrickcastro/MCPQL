@@ -466,11 +466,11 @@ const status = await mcp_get_security_status({});
 When operations are blocked, MCPQL provides clear guidance:
 
 ```
-Error: Las operaciones de modificación están deshabilitadas por seguridad.
-Para habilitar modificaciones, configure: DB_ALLOW_MODIFICATIONS=true
+Error: Modification operations are disabled for security.
+To enable modifications, configure: DB_ALLOW_MODIFICATIONS=true
 
-Error: La ejecución de procedimientos almacenados está deshabilitada por seguridad.
-Para habilitar procedimientos almacenados, configure: DB_ALLOW_STORED_PROCEDURES=true
+Error: Stored procedure execution is disabled for security.
+To enable stored procedures, configure: DB_ALLOW_STORED_PROCEDURES=true
 ```
 
 ### 📋 Always Allowed Operations
