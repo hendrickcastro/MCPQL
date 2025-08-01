@@ -217,13 +217,13 @@ export const connectDB = async (): Promise<sql.ConnectionPool> => {
       const errorMessage = err.message.toLowerCase();
 
       if (errorMessage.includes('login failed')) {
-        console.error('💡 Tip: Check your username and password. For Windows Authentication, ensure DB_AUTHENTICATION_TYPE=windows');
+        console.error(' Tip: Check your username and password. For Windows Authentication, ensure DB_AUTHENTICATION_TYPE=windows');
       } else if (errorMessage.includes('server was not found')) {
-        console.error('💡 Tip: Check your server name and port. For SQL Server Express, you might need DB_INSTANCE_NAME');
+        console.error(' Tip: Check your server name and port. For SQL Server Express, you might need DB_INSTANCE_NAME');
       } else if (errorMessage.includes('certificate')) {
-        console.error('💡 Tip: For local development, try setting DB_TRUST_SERVER_CERTIFICATE=true');
+        console.error(' Tip: For local development, try setting DB_TRUST_SERVER_CERTIFICATE=true');
       } else if (errorMessage.includes('timeout')) {
-        console.error('💡 Tip: Try increasing DB_TIMEOUT or check your network connection');
+        console.error(' Tip: Try increasing DB_TIMEOUT or check your network connection');
       }
     }
 
@@ -245,10 +245,10 @@ export const testConnection = async (): Promise<boolean> => {
     const testPool = await connectDB();
     const request = testPool.request();
     await request.query('SELECT 1 as test');
-    console.log('✅ Database connection test successful');
+    console.log(' Database connection test successful');
     return true;
   } catch (err) {
-    console.error('❌ Database connection test failed:', err);
+    console.error(' Database connection test failed:', err);
     return false;
   }
 };

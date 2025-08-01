@@ -1,9 +1,9 @@
 import { describe, it, expect, beforeAll, afterAll } from '@jest/globals';
 import { connectDB, closePool } from '../db.js';
-// Importar las herramientas directamente de los módulos específicos en lugar de mcp-server.js
-// Esto permite que los tests sigan funcionando mientras mantenemos la API pública simplificada
+// Importar las herramientas directamente de los mdulos especficos en lugar de mcp-server.js
+// Esto permite que los tests sigan funcionando mientras mantenemos la API pblica simplificada
 
-// Importaciones de herramientas de análisis de tablas
+// Importaciones de herramientas de anlisis de tablas
 import {
     mcp_table_analysis,
     mcp_get_columns,
@@ -14,7 +14,7 @@ import {
     mcp_get_all_table_info
 } from '../tools/tableAnalysis.js';
 
-// Importaciones de herramientas de análisis de procedimientos almacenados
+// Importaciones de herramientas de anlisis de procedimientos almacenados
 import {
     mcp_sp_structure,
     mcp_get_sp_info,
@@ -28,7 +28,7 @@ import {
     mcp_get_sp_all_info_simple
 } from '../tools/storedProcedureAnalysis.js';
 
-// Importaciones de herramientas de operación de datos
+// Importaciones de herramientas de operacin de datos
 import {
     mcp_execute_procedure,
     mcp_execute_query,
@@ -40,7 +40,7 @@ import {
     mcp_quick_data_analysis
 } from '../tools/dataOperations.js';
 
-// Importaciones de herramientas de búsqueda
+// Importaciones de herramientas de bsqueda
 import {
     mcp_get_dependencies,
     mcp_search_objects_by_name,
@@ -55,24 +55,24 @@ import chalk from 'chalk';
 describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
     beforeAll(async () => {
         try {
-            console.log(chalk.blue('🔌 Connecting to database...'));
+            console.log(chalk.blue(' Connecting to database...'));
             await connectDB();
-            console.log(chalk.green('✅ Database connection established!'));
+            console.log(chalk.green(' Database connection established!'));
         } catch (error) {
             console.warn('Database connection failed in tests:', error);
         }
     });
 
     afterAll(async () => {
-        console.log(chalk.blue('🔌 Closing database connection...'));
+        console.log(chalk.blue(' Closing database connection...'));
         await closePool();
     });
 
-    describe('📊 Individual Table Analysis Functions - Python Style', () => {
+    describe(' Individual Table Analysis Functions - Python Style', () => {
         const testTable = '[api].[Idiomas]';
 
         it('should get detailed column information', async () => {
-            console.log(`\n🔍 Getting columns for ${testTable}...`);
+            console.log(`\n Getting columns for ${testTable}...`);
 
             const result = await mcp_get_columns({ table_name: testTable });
 
@@ -81,7 +81,7 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
                 expect(Array.isArray(result.data)).toBe(true);
                 expect(result.data.length).toBeGreaterThan(0);
 
-                console.log(chalk.blue('\n📋 Detailed Column Information:'));
+                console.log(chalk.blue('\n Detailed Column Information:'));
 
                 const table = new Table({
                     head: ['Column', 'Type', 'Max Length', 'Precision', 'Scale', 'Nullable', 'Identity', 'Computed', 'Description'],
@@ -113,13 +113,13 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
         });
 
         it('should get primary key information', async () => {
-            console.log(`\n🔑 Getting primary keys for ${testTable}...`);
+            console.log(`\n Getting primary keys for ${testTable}...`);
 
             const result = await mcp_get_primary_keys({ table_name: testTable });
 
             expect(result.success).toBe(true);
             if (result.success) {
-                console.log(chalk.blue('\n📋 Primary Key Information:'));
+                console.log(chalk.blue('\n Primary Key Information:'));
 
                 if (result.data.length > 0) {
                     const table = new Table({
@@ -143,13 +143,13 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
         });
 
         it('should get foreign key information', async () => {
-            console.log(`\n🔗 Getting foreign keys for ${testTable}...`);
+            console.log(`\n Getting foreign keys for ${testTable}...`);
 
             const result = await mcp_get_foreign_keys({ table_name: testTable });
 
             expect(result.success).toBe(true);
             if (result.success) {
-                console.log(chalk.blue('\n📋 Foreign Key Information:'));
+                console.log(chalk.blue('\n Foreign Key Information:'));
 
                 if (result.data.length > 0) {
                     const table = new Table({
@@ -176,13 +176,13 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
         });
 
         it('should get index information', async () => {
-            console.log(`\n📇 Getting indexes for ${testTable}...`);
+            console.log(`\n Getting indexes for ${testTable}...`);
 
             const result = await mcp_get_indexes({ table_name: testTable });
 
             expect(result.success).toBe(true);
             if (result.success) {
-                console.log(chalk.blue('\n📋 Index Information:'));
+                console.log(chalk.blue('\n Index Information:'));
 
                 if (result.data.length > 0) {
                     const table = new Table({
@@ -209,13 +209,13 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
         });
 
         it('should get constraint information', async () => {
-            console.log(`\n⚖️ Getting constraints for ${testTable}...`);
+            console.log(`\n Getting constraints for ${testTable}...`);
 
             const result = await mcp_get_constraints({ table_name: testTable });
 
             expect(result.success).toBe(true);
             if (result.success) {
-                console.log(chalk.blue('\n📋 Constraint Information:'));
+                console.log(chalk.blue('\n Constraint Information:'));
 
                 if (result.data.length > 0) {
                     const table = new Table({
@@ -242,18 +242,18 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
         });
 
         it('should get all table info in one call', async () => {
-            console.log(`\n🎯 Getting ALL table info for ${testTable}...`);
+            console.log(`\n Getting ALL table info for ${testTable}...`);
 
             const result = await mcp_get_all_table_info({ table_name: testTable });
 
             expect(result.success).toBe(true);
             if (result.success) {
-                console.log(chalk.green('\n✅ Complete Table Analysis Summary:'));
-                console.log(`   📊 Columns: ${result.data.columns.length}`);
-                console.log(`   🔑 Primary Keys: ${result.data.primary_keys.length}`);
-                console.log(`   🔗 Foreign Keys: ${result.data.foreign_keys.length}`);
-                console.log(`   📇 Indexes: ${result.data.indexes.length}`);
-                console.log(`   ⚖️ Constraints: ${result.data.constraints.length}`);
+                console.log(chalk.green('\n Complete Table Analysis Summary:'));
+                console.log(`    Columns: ${result.data.columns.length}`);
+                console.log(`    Primary Keys: ${result.data.primary_keys.length}`);
+                console.log(`    Foreign Keys: ${result.data.foreign_keys.length}`);
+                console.log(`    Indexes: ${result.data.indexes.length}`);
+                console.log(`    Constraints: ${result.data.constraints.length}`);
 
                 // Verify structure matches Python implementation
                 expect(result.data).toHaveProperty('columns');
@@ -271,9 +271,9 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
         });
     });
 
-    describe('📊 Table Analysis - Complete Structure', () => {
+    describe(' Table Analysis - Complete Structure', () => {
         it('should analyze api.Idiomas table structure comprehensively', async () => {
-            console.log(chalk.green('\n🔍 Analyzing table [api].[Idiomas]...'));
+            console.log(chalk.green('\n Analyzing table [api].[Idiomas]...'));
 
             const result = await mcp_table_analysis({ table_name: '[api].[Idiomas]' });
             expect(result.success).toBe(true);
@@ -283,7 +283,7 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
 
                 // Display table information
                 if (table_info) {
-                    console.log(chalk.yellow(`\n📋 Table Information:`));
+                    console.log(chalk.yellow(`\n Table Information:`));
                     console.log(`   Schema: ${table_info.schema_name}`);
                     console.log(`   Table: ${table_info.table_name}`);
                     console.log(`   Created: ${table_info.create_date}`);
@@ -311,7 +311,7 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
                         ]);
                     });
 
-                    console.log(chalk.green('\n📋 Columns:'));
+                    console.log(chalk.green('\n Columns:'));
                     console.log(columnsTable.toString());
                 }
 
@@ -332,7 +332,7 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
                         ]);
                     });
 
-                    console.log(chalk.green('\n🔗 Foreign Keys:'));
+                    console.log(chalk.green('\n Foreign Keys:'));
                     console.log(fkTable.toString());
                 }
 
@@ -353,7 +353,7 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
                         ]);
                     });
 
-                    console.log(chalk.green('\n📇 Indexes:'));
+                    console.log(chalk.green('\n Indexes:'));
                     console.log(indexTable.toString());
                 }
 
@@ -373,7 +373,7 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
                         ]);
                     });
 
-                    console.log(chalk.green('\n🔒 Constraints:'));
+                    console.log(chalk.green('\n Constraints:'));
                     console.log(constraintTable.toString());
                 }
 
@@ -388,9 +388,9 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
         });
     });
 
-    describe('👀 Data Preview & Statistics', () => {
+    describe(' Data Preview & Statistics', () => {
         it('should preview data and show column statistics', async () => {
-            console.log(chalk.green('\n📊 Getting sample data from [api].[Idiomas]...'));
+            console.log(chalk.green('\n Getting sample data from [api].[Idiomas]...'));
 
             const result = await mcp_preview_data({
                 table_name: '[api].[Idiomas]',
@@ -410,12 +410,12 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
                     dataTable.push(Object.values(row).map(val => val?.toString() || 'NULL'));
                 });
 
-                console.log(chalk.green('\n📋 Sample Data (Top 5 rows):'));
+                console.log(chalk.green('\n Sample Data (Top 5 rows):'));
                 console.log(dataTable.toString());
 
                 // Get column statistics for first few columns
                 const columns = Object.keys(result.data[0]).slice(0, 3);
-                console.log(chalk.green('\n📈 Column Statistics:'));
+                console.log(chalk.green('\n Column Statistics:'));
 
                 for (const column of columns) {
                     const statsResult = await mcp_get_column_stats({
@@ -438,9 +438,9 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
         });
     });
 
-    describe('🔗 Database Object Dependencies', () => {
+    describe(' Database Object Dependencies', () => {
         it('should find dependencies for api.Idiomas', async () => {
-            console.log(chalk.green('\n🔍 Searching dependencies for [api].[Idiomas]...'));
+            console.log(chalk.green('\n Searching dependencies for [api].[Idiomas]...'));
 
             const result = await mcp_get_dependencies({
                 object_name: '[api].[Idiomas]'
@@ -464,14 +464,14 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
                         ]);
                     });
 
-                    console.log(chalk.green('\n🔗 Dependencies found:'));
+                    console.log(chalk.green('\n Dependencies found:'));
                     console.log(depsTable.toString());
 
                     // Show examples of fully qualified names
-                    console.log(chalk.yellow('\n💡 Examples of fully qualified object names:'));
+                    console.log(chalk.yellow('\n Examples of fully qualified object names:'));
                     result.data.forEach((dep: any) => {
                         if (dep.referenced_schema_name && dep.referenced_entity_name) {
-                            console.log(`   • [${dep.referenced_schema_name}].[${dep.referenced_entity_name}]`);
+                            console.log(`    [${dep.referenced_schema_name}].[${dep.referenced_entity_name}]`);
                         }
                     });
                 } else {
@@ -483,11 +483,11 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
         });
     });
 
-    describe('⚙️ Stored Procedure Analysis', () => {
+    describe(' Stored Procedure Analysis', () => {
         const testSP = '[api].[usp_BusquedaByIdUnico_v2]';
 
         it('should analyze stored procedure structure', async () => {
-            console.log(`\n🔍 Analyzing stored procedure ${testSP}...`);
+            console.log(`\n Analyzing stored procedure ${testSP}...`);
 
             const result = await mcp_sp_structure({ sp_name: testSP });
 
@@ -509,7 +509,7 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
 
                 // Parameters table
                 if (result.data.parameters.length > 0) {
-                    console.log(chalk.blue('\n📋 Enhanced Parameters:'));
+                    console.log(chalk.blue('\n Enhanced Parameters:'));
                     const table = new Table({
                         head: ['Parameter', 'Type', 'Length', 'Output', 'Has Default', 'Default Value'],
                         style: { head: ['cyan'] }
@@ -531,7 +531,7 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
 
                 // Dependencies
                 if (result.data.dependencies && result.data.dependencies.length > 0) {
-                    console.log(chalk.blue('\n📋 Dependencies:'));
+                    console.log(chalk.blue('\n Dependencies:'));
                     const table = new Table({
                         head: ['Schema', 'Entity', 'Type', 'Database'],
                         style: { head: ['cyan'] }
@@ -550,19 +550,19 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
                 }
 
                 // Procedure definition (truncated for display)
-                console.log(chalk.blue('\n📄 Enhanced Procedure Definition:'));
+                console.log(chalk.blue('\n Enhanced Procedure Definition:'));
                 console.log(`${result.data.definition?.substring(0, 200)}...`);
             }
         });
 
         it('should get stored procedure basic info', async () => {
-            console.log(`\n📊 Getting SP info for ${testSP}...`);
+            console.log(`\n Getting SP info for ${testSP}...`);
 
             const result = await mcp_get_sp_info({ sp_name: testSP });
 
             expect(result.success).toBe(true);
             if (result.success && result.data) {
-                console.log(chalk.blue('\n📋 Stored Procedure Information:'));
+                console.log(chalk.blue('\n Stored Procedure Information:'));
                 console.log(`   Schema: ${result.data.schema_name}`);
                 console.log(`   Name: ${result.data.procedure_name}`);
                 console.log(`   Created: ${result.data.create_date}`);
@@ -586,7 +586,7 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
         });
 
         it('should get detailed stored procedure parameters', async () => {
-            console.log(`\n🔧 Getting SP parameters for ${testSP}...`);
+            console.log(`\n Getting SP parameters for ${testSP}...`);
 
             const result = await mcp_get_sp_parameters({ sp_name: testSP });
 
@@ -595,7 +595,7 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
                 expect(Array.isArray(result.data)).toBe(true);
 
                 if (result.data.length > 0) {
-                    console.log(chalk.blue('\n📋 Detailed Parameters Information:'));
+                    console.log(chalk.blue('\n Detailed Parameters Information:'));
                     const table = new Table({
                         head: ['Parameter', 'Data Type', 'Full Type', 'Max Length', 'Precision', 'Scale', 'Output', 'Has Default', 'Default Value'],
                         colWidths: [15, 12, 18, 12, 10, 8, 8, 12, 15],
@@ -631,7 +631,7 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
         });
 
         it('should get stored procedure dependencies', async () => {
-            console.log(`\n🔗 Getting SP dependencies for ${testSP}...`);
+            console.log(`\n Getting SP dependencies for ${testSP}...`);
 
             const result = await mcp_get_sp_dependencies({ sp_name: testSP });
 
@@ -639,7 +639,7 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
             if (result.success) {
                 expect(Array.isArray(result.data)).toBe(true);
 
-                console.log(chalk.blue('\n📋 Stored Procedure Dependencies:'));
+                console.log(chalk.blue('\n Stored Procedure Dependencies:'));
 
                 if (result.data.length > 0) {
                     const table = new Table({
@@ -674,20 +674,20 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
         });
 
         it('should get stored procedure definition', async () => {
-            console.log(`\n📄 Getting SP definition for ${testSP}...`);
+            console.log(`\n Getting SP definition for ${testSP}...`);
 
             const result = await mcp_get_sp_definition({ sp_name: testSP });
 
             expect(result.success).toBe(true);
             if (result.success && result.data) {
-                console.log(chalk.blue('\n📋 Definition Information:'));
+                console.log(chalk.blue('\n Definition Information:'));
                 console.log(`   Procedure: ${result.data.schema_name}.${result.data.procedure_name}`);
                 console.log(`   Definition Length: ${result.data.definition_length} characters`);
                 console.log(`   Created: ${result.data.create_date}`);
                 console.log(`   Modified: ${result.data.modify_date}`);
 
                 // Show first 300 characters of definition
-                console.log(chalk.blue('\n📄 Source Code Preview:'));
+                console.log(chalk.blue('\n Source Code Preview:'));
                 console.log(`${result.data.source_code?.substring(0, 300)}...`);
 
                 // Verify definition structure
@@ -701,17 +701,17 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
         });
 
         it('should get complete stored procedure structure', async () => {
-            console.log(`\n🎯 Getting COMPLETE SP structure for ${testSP}...`);
+            console.log(`\n Getting COMPLETE SP structure for ${testSP}...`);
 
             const result = await mcp_get_sp_complete_structure({ sp_name: testSP });
 
             expect(result.success).toBe(true);
             if (result.success) {
-                console.log(chalk.green('\n✅ Complete SP Analysis Summary:'));
-                console.log(`   📊 Basic Info: ${result.data.info ? 'Available' : 'Not found'}`);
-                console.log(`   🔧 Parameters: ${result.data.parameters.length}`);
-                console.log(`   🔗 Dependencies: ${result.data.dependencies.length}`);
-                console.log(`   📄 Definition: ${result.data.definition ? 'Available' : 'Not found'}`);
+                console.log(chalk.green('\n Complete SP Analysis Summary:'));
+                console.log(`    Basic Info: ${result.data.info ? 'Available' : 'Not found'}`);
+                console.log(`    Parameters: ${result.data.parameters.length}`);
+                console.log(`    Dependencies: ${result.data.dependencies.length}`);
+                console.log(`    Definition: ${result.data.definition ? 'Available' : 'Not found'}`);
 
                 // Verify structure matches Python implementation
                 expect(result.data).toHaveProperty('info');
@@ -724,7 +724,7 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
 
                 // Show summary table
                 if (result.data.info) {
-                    console.log(chalk.blue('\n📋 SP Summary:'));
+                    console.log(chalk.blue('\n SP Summary:'));
                     const summaryTable = new Table({
                         head: ['Property', 'Value'],
                         style: { head: ['cyan'] }
@@ -747,9 +747,9 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
         });
     });
 
-    describe('💻 SQL Query Execution', () => {
+    describe(' SQL Query Execution', () => {
         it('should execute custom SQL queries', async () => {
-            console.log(chalk.green('\n💻 Executing custom SQL query...'));
+            console.log(chalk.green('\n Executing custom SQL query...'));
 
             const result = await mcp_execute_query({
                 query: 'SELECT TOP 3 TABLE_SCHEMA, TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = \'BASE TABLE\' ORDER BY TABLE_NAME'
@@ -767,7 +767,7 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
                     queryTable.push(Object.values(row).map(val => val?.toString() || 'NULL'));
                 });
 
-                console.log(chalk.green('\n📋 Query Results:'));
+                console.log(chalk.green('\n Query Results:'));
                 console.log(queryTable.toString());
             }
         });
@@ -779,23 +779,23 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
 
             expect(result.success).toBe(false);
             if (!result.success) {
-                console.log(chalk.red(`   ❌ Expected error: ${result.error}`));
+                console.log(chalk.red(`    Expected error: ${result.error}`));
                 expect(result.error).toBeDefined();
             }
         });
     });
 
-    describe('⚙️ Stored Procedure Info - Simple Functions (Python StoredProcedureInfo Style)', () => {
+    describe(' Stored Procedure Info - Simple Functions (Python StoredProcedureInfo Style)', () => {
         const testSP = '[api].[usp_BusquedaByIdUnico_v2]';
 
         it('should get stored procedure definition (simple)', async () => {
-            console.log(`\n📄 Getting SP definition (simple) for ${testSP}...`);
+            console.log(`\n Getting SP definition (simple) for ${testSP}...`);
 
             const result = await mcp_get_sp_definition_simple({ sp_name: testSP });
 
             expect(result.success).toBe(true);
             if (result.success && result.data) {
-                console.log(chalk.blue('\n📄 Simple Definition Result:'));
+                console.log(chalk.blue('\n Simple Definition Result:'));
                 console.log(`   Definition Length: ${result.data.length} characters`);
                 console.log(`   Preview: ${result.data.substring(0, 150)}...`);
 
@@ -806,7 +806,7 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
         });
 
         it('should get stored procedure parameters (simple)', async () => {
-            console.log(`\n🔧 Getting SP parameters (simple) for ${testSP}...`);
+            console.log(`\n Getting SP parameters (simple) for ${testSP}...`);
 
             const result = await mcp_get_sp_parameters_simple({ sp_name: testSP });
 
@@ -815,7 +815,7 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
                 expect(Array.isArray(result.data)).toBe(true);
 
                 if (result.data.length > 0) {
-                    console.log(chalk.blue('\n📋 Simple Parameters Information:'));
+                    console.log(chalk.blue('\n Simple Parameters Information:'));
                     const table = new Table({
                         head: ['Parameter', 'Data Type', 'Max Length', 'Output', 'Has Default', 'Default Value'],
                         style: { head: ['cyan'] }
@@ -845,7 +845,7 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
         });
 
         it('should get stored procedure dependencies (simple)', async () => {
-            console.log(`\n🔗 Getting SP dependencies (simple) for ${testSP}...`);
+            console.log(`\n Getting SP dependencies (simple) for ${testSP}...`);
 
             const result = await mcp_get_sp_dependencies_simple({ sp_name: testSP });
 
@@ -853,7 +853,7 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
             if (result.success) {
                 expect(Array.isArray(result.data)).toBe(true);
 
-                console.log(chalk.blue('\n📋 Simple Dependencies Information:'));
+                console.log(chalk.blue('\n Simple Dependencies Information:'));
 
                 if (result.data.length > 0) {
                     const table = new Table({
@@ -887,16 +887,16 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
         });
 
         it('should get all stored procedure info (simple - matching Python get_all_info)', async () => {
-            console.log(`\n🎯 Getting ALL SP info (simple) for ${testSP}...`);
+            console.log(`\n Getting ALL SP info (simple) for ${testSP}...`);
 
             const result = await mcp_get_sp_all_info_simple({ sp_name: testSP });
 
             expect(result.success).toBe(true);
             if (result.success) {
-                console.log(chalk.green('\n✅ Simple SP Info Summary (Python Style):'));
-                console.log(`   📄 Definition: ${result.data.definition ? 'Available' : 'Not found'}`);
-                console.log(`   🔧 Parameters: ${result.data.parameters.length}`);
-                console.log(`   🔗 Dependencies: ${result.data.dependencies.length}`);
+                console.log(chalk.green('\n Simple SP Info Summary (Python Style):'));
+                console.log(`    Definition: ${result.data.definition ? 'Available' : 'Not found'}`);
+                console.log(`    Parameters: ${result.data.parameters.length}`);
+                console.log(`    Dependencies: ${result.data.dependencies.length}`);
 
                 // Verify structure matches Python get_all_info method
                 expect(result.data).toHaveProperty('definition');
@@ -907,7 +907,7 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
                 expect(Array.isArray(result.data.dependencies)).toBe(true);
 
                 // Show summary table
-                console.log(chalk.blue('\n📋 Simple SP Info Summary:'));
+                console.log(chalk.blue('\n Simple SP Info Summary:'));
                 const summaryTable = new Table({
                     head: ['Property', 'Value'],
                     style: { head: ['cyan'] }
@@ -924,7 +924,7 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
 
                 // Show definition preview if available
                 if (result.data.definition) {
-                    console.log(chalk.blue('\n📄 Definition Preview:'));
+                    console.log(chalk.blue('\n Definition Preview:'));
                     console.log(`${result.data.definition.substring(0, 200)}...`);
                 }
             }
@@ -932,10 +932,10 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
     });
 
     // ObjectSearch class tests - matching Python ObjectSearch functionality (VERY IMPORTANT)
-    describe('🔍 ObjectSearch Functions - Database Object Discovery', () => {
-        describe('📝 Search by Name', () => {
-            test('🔍 mcp_search_objects_by_name - should find objects by name pattern', async () => {
-                console.log(chalk.cyan('\n🔍 Testing Object Search by Name'));
+    describe(' ObjectSearch Functions - Database Object Discovery', () => {
+        describe(' Search by Name', () => {
+            test(' mcp_search_objects_by_name - should find objects by name pattern', async () => {
+                console.log(chalk.cyan('\n Testing Object Search by Name'));
 
                 const result = await mcp_search_objects_by_name({
                     pattern: 'Idiomas'
@@ -962,14 +962,14 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
                         ]);
                     });
 
-                    console.log(chalk.green('✅ Objects Found by Name Pattern:'));
+                    console.log(chalk.green(' Objects Found by Name Pattern:'));
                     console.log(table.toString());
-                    console.log(chalk.blue(`📊 Total objects found: ${result.data.length}`));
+                    console.log(chalk.blue(` Total objects found: ${result.data.length}`));
                 }
             });
 
-            test('🎯 mcp_search_objects_by_name - should filter by object types', async () => {
-                console.log(chalk.cyan('\n🎯 Testing Object Search with Type Filter'));
+            test(' mcp_search_objects_by_name - should filter by object types', async () => {
+                console.log(chalk.cyan('\n Testing Object Search with Type Filter'));
 
                 const result = await mcp_search_objects_by_name({
                     pattern: 'usp_',
@@ -981,14 +981,14 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
                     expect(Array.isArray(result.data)).toBe(true);
                 }
 
-                console.log(chalk.green('✅ Procedures Found:'));
-                console.log(chalk.blue(`📊 Stored procedures matching 'usp_': ${result.success ? result.data?.length || 0 : 0}`));
+                console.log(chalk.green(' Procedures Found:'));
+                console.log(chalk.blue(` Stored procedures matching 'usp_': ${result.success ? result.data?.length || 0 : 0}`));
             });
         });
 
-        describe('📄 Search in Definitions', () => {
-            test('🔍 mcp_search_in_definitions - should find objects by content', async () => {
-                console.log(chalk.cyan('\n🔍 Testing Search in Definitions'));
+        describe(' Search in Definitions', () => {
+            test(' mcp_search_in_definitions - should find objects by content', async () => {
+                console.log(chalk.cyan('\n Testing Search in Definitions'));
 
                 const result = await mcp_search_in_definitions({
                     pattern: 'SELECT',
@@ -1016,16 +1016,16 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
                         ]);
                     });
 
-                    console.log(chalk.green('✅ Objects Found by Definition Content:'));
+                    console.log(chalk.green(' Objects Found by Definition Content:'));
                     console.log(table.toString());
-                    console.log(chalk.blue(`📊 Total objects with 'SELECT': ${result.data.length}`));
+                    console.log(chalk.blue(` Total objects with 'SELECT': ${result.data.length}`));
                 }
             });
         });
 
-        describe('📋 Search by Type', () => {
-            test('🗂️ mcp_search_objects_by_type - should find all objects of specific type', async () => {
-                console.log(chalk.cyan('\n🗂️ Testing Search by Object Type'));
+        describe(' Search by Type', () => {
+            test(' mcp_search_objects_by_type - should find all objects of specific type', async () => {
+                console.log(chalk.cyan('\n Testing Search by Object Type'));
 
                 const result = await mcp_search_objects_by_type({
                     object_type: 'TABLE'
@@ -1051,14 +1051,14 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
                         ]);
                     });
 
-                    console.log(chalk.green('✅ Tables Found:'));
+                    console.log(chalk.green(' Tables Found:'));
                     console.log(table.toString());
-                    console.log(chalk.blue(`📊 Total tables in database: ${result.data.length}`));
+                    console.log(chalk.blue(` Total tables in database: ${result.data.length}`));
                 }
             });
 
-            test('❌ mcp_search_objects_by_type - should handle invalid type', async () => {
-                console.log(chalk.cyan('\n❌ Testing Invalid Object Type'));
+            test(' mcp_search_objects_by_type - should handle invalid type', async () => {
+                console.log(chalk.cyan('\n Testing Invalid Object Type'));
 
                 const result = await mcp_search_objects_by_type({
                     object_type: 'INVALID'
@@ -1067,14 +1067,14 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
                 expect(result.success).toBe(false);
                 if (!result.success) {
                     expect(result.error).toContain('Invalid object type');
-                    console.log(chalk.red(`✅ Expected error: ${result.error}`));
+                    console.log(chalk.red(` Expected error: ${result.error}`));
                 }
             });
         });
 
-        describe('🔗 Object Dependencies', () => {
-            test('🔍 mcp_get_object_dependencies - should find object dependencies', async () => {
-                console.log(chalk.cyan('\n🔍 Testing Object Dependencies'));
+        describe(' Object Dependencies', () => {
+            test(' mcp_get_object_dependencies - should find object dependencies', async () => {
+                console.log(chalk.cyan('\n Testing Object Dependencies'));
 
                 const result = await mcp_get_object_dependencies({
                     object_name: '[api].[usp_BusquedaByIdUnico_v2]'
@@ -1096,22 +1096,22 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
                             chalk.yellow(`${dep.referencing_schema}.${dep.referencing_object}`),
                             chalk.blue(`${dep.referenced_schema}.${dep.referenced_object}`),
                             chalk.green(dep.object_type),
-                            dep.dependency_type === 'Dependent' ? chalk.red('⬆️ Dependent') : chalk.cyan('⬇️ Dependency')
+                            dep.dependency_type === 'Dependent' ? chalk.red(' Dependent') : chalk.cyan(' Dependency')
                         ]);
                     });
 
-                    console.log(chalk.green('✅ Object Dependencies Found:'));
+                    console.log(chalk.green(' Object Dependencies Found:'));
                     console.log(table.toString());
-                    console.log(chalk.blue(`📊 Total dependencies: ${result.data.length}`));
+                    console.log(chalk.blue(` Total dependencies: ${result.data.length}`));
                 } else {
-                    console.log(chalk.yellow('📋 No dependencies found for this object'));
+                    console.log(chalk.yellow(' No dependencies found for this object'));
                 }
             });
         });
 
-        describe('🎯 Comprehensive Search', () => {
-            test('🚀 mcp_search_comprehensive - should perform complete search', async () => {
-                console.log(chalk.cyan('\n🚀 Testing Comprehensive Search'));
+        describe(' Comprehensive Search', () => {
+            test(' mcp_search_comprehensive - should perform complete search', async () => {
+                console.log(chalk.cyan('\n Testing Comprehensive Search'));
 
                 const result = await mcp_search_comprehensive({
                     pattern: 'Id',
@@ -1134,16 +1134,16 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
                     });
 
                     summaryTable.push(
-                        ['🏷️ Name Matches', chalk.green(result.data.name_matches.length.toString())],
-                        ['📄 Definition Matches', chalk.yellow(result.data.definition_matches.length.toString())],
-                        ['📊 Total Matches', chalk.blue(result.data.total_matches.toString())]
+                        [' Name Matches', chalk.green(result.data.name_matches.length.toString())],
+                        [' Definition Matches', chalk.yellow(result.data.definition_matches.length.toString())],
+                        [' Total Matches', chalk.blue(result.data.total_matches.toString())]
                     );
 
-                    console.log(chalk.green('✅ Comprehensive Search Results:'));
+                    console.log(chalk.green(' Comprehensive Search Results:'));
                     console.log(summaryTable.toString());
 
                     if (result.data.name_matches.length > 0) {
-                        console.log(chalk.cyan('\n🏷️ Sample Name Matches:'));
+                        console.log(chalk.cyan('\n Sample Name Matches:'));
                         const nameTable = new Table({
                             head: ['Object Name', 'Type', 'Schema'],
                             style: { head: ['cyan'] }
@@ -1161,7 +1161,7 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
                     }
 
                     if (result.data.definition_matches.length > 0) {
-                        console.log(chalk.cyan('\n📄 Sample Definition Matches:'));
+                        console.log(chalk.cyan('\n Sample Definition Matches:'));
                         console.log(chalk.white(`Found pattern 'Id' in ${result.data.definition_matches.length} object definitions`));
                     }
                 }
@@ -1170,10 +1170,10 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
     });
 
     // QuickView class tests - matching Python QuickView functionality
-    describe('🎨 QuickView Functions', () => {
-        describe('📊 Enhanced Data Preview', () => {
-            test('🔍 mcp_preview_data_enhanced - should preview table data with formatting', async () => {
-                console.log(chalk.cyan('\n🔍 Testing Enhanced Data Preview'));
+    describe(' QuickView Functions', () => {
+        describe(' Enhanced Data Preview', () => {
+            test(' mcp_preview_data_enhanced - should preview table data with formatting', async () => {
+                console.log(chalk.cyan('\n Testing Enhanced Data Preview'));
 
                 const result = await mcp_preview_data_enhanced({
                     table_name: '[api].[Idiomas]',
@@ -1200,14 +1200,14 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
                         ]);
                     });
 
-                    console.log(chalk.green('✅ Enhanced Preview Results:'));
+                    console.log(chalk.green(' Enhanced Preview Results:'));
                     console.log(table.toString());
-                    console.log(chalk.blue(`📈 Total rows returned: ${result.data.length}`));
+                    console.log(chalk.blue(` Total rows returned: ${result.data.length}`));
                 }
             });
 
-            test('🎯 mcp_preview_data_enhanced - should handle filters', async () => {
-                console.log(chalk.cyan('\n🎯 Testing Enhanced Data Preview with Filters'));
+            test(' mcp_preview_data_enhanced - should handle filters', async () => {
+                console.log(chalk.cyan('\n Testing Enhanced Data Preview with Filters'));
 
                 const result = await mcp_preview_data_enhanced({
                     table_name: '[api].[Idiomas]',
@@ -1220,14 +1220,14 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
                     expect(Array.isArray(result.data)).toBe(true);
                 }
 
-                console.log(chalk.green('✅ Filtered Preview Results:'));
-                console.log(chalk.blue(`📊 Rows with Id=1: ${result.success ? result.data?.length || 0 : 0}`));
+                console.log(chalk.green(' Filtered Preview Results:'));
+                console.log(chalk.blue(` Rows with Id=1: ${result.success ? result.data?.length || 0 : 0}`));
             });
         });
 
-        describe('🎲 Sample Values', () => {
-            test('🎯 mcp_get_sample_values - should get distinct sample values', async () => {
-                console.log(chalk.cyan('\n🎯 Testing Sample Values'));
+        describe(' Sample Values', () => {
+            test(' mcp_get_sample_values - should get distinct sample values', async () => {
+                console.log(chalk.cyan('\n Testing Sample Values'));
 
                 const result = await mcp_get_sample_values({
                     table_name: '[api].[Idiomas]',
@@ -1250,15 +1250,15 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
                         table.push([chalk.yellow(String(value))]);
                     });
 
-                    console.log(chalk.green('✅ Sample Values Results:'));
+                    console.log(chalk.green(' Sample Values Results:'));
                     console.log(table.toString());
                 }
             });
         });
 
-        describe('📈 Enhanced Column Statistics', () => {
-            test('📊 mcp_get_column_stats_enhanced - should get comprehensive column stats', async () => {
-                console.log(chalk.cyan('\n📊 Testing Enhanced Column Statistics'));
+        describe(' Enhanced Column Statistics', () => {
+            test(' mcp_get_column_stats_enhanced - should get comprehensive column stats', async () => {
+                console.log(chalk.cyan('\n Testing Enhanced Column Statistics'));
 
                 const result = await mcp_get_column_stats_enhanced({
                     table_name: '[api].[Idiomas]',
@@ -1280,28 +1280,28 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
                     });
 
                     table.push(
-                        ['📊 Total Rows', chalk.green(result.data.total_rows.toString())],
-                        ['🎯 Distinct Values', chalk.yellow(result.data.distinct_values.toString())],
-                        ['❌ Null Count', chalk.red(result.data.null_count.toString())],
-                        ['📉 Min Value', chalk.blue(String(result.data.min_value || 'N/A'))],
-                        ['📈 Max Value', chalk.blue(String(result.data.max_value || 'N/A'))],
-                        ['🎲 Sample Count', chalk.magenta(result.data.sample_values.length.toString())]
+                        [' Total Rows', chalk.green(result.data.total_rows.toString())],
+                        [' Distinct Values', chalk.yellow(result.data.distinct_values.toString())],
+                        [' Null Count', chalk.red(result.data.null_count.toString())],
+                        [' Min Value', chalk.blue(String(result.data.min_value || 'N/A'))],
+                        [' Max Value', chalk.blue(String(result.data.max_value || 'N/A'))],
+                        [' Sample Count', chalk.magenta(result.data.sample_values.length.toString())]
                     );
 
-                    console.log(chalk.green('✅ Enhanced Column Statistics:'));
+                    console.log(chalk.green(' Enhanced Column Statistics:'));
                     console.log(table.toString());
 
                     if (result.data.sample_values.length > 0) {
-                        console.log(chalk.cyan('🎲 Sample Values:'));
+                        console.log(chalk.cyan(' Sample Values:'));
                         console.log(chalk.white(result.data.sample_values.join(', ')));
                     }
                 }
             });
         });
 
-        describe('⚡ Quick Data Analysis', () => {
-            test('🚀 mcp_quick_data_analysis - should perform comprehensive analysis', async () => {
-                console.log(chalk.cyan('\n🚀 Testing Quick Data Analysis'));
+        describe(' Quick Data Analysis', () => {
+            test(' mcp_quick_data_analysis - should perform comprehensive analysis', async () => {
+                console.log(chalk.cyan('\n Testing Quick Data Analysis'));
 
                 const result = await mcp_quick_data_analysis({
                     table_name: '[api].[Idiomas]',
@@ -1323,12 +1323,12 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
                     });
 
                     summaryTable.push(
-                        ['📊 Total Rows', chalk.green(result.data.row_count.toString())],
-                        ['📋 Column Count', chalk.yellow(result.data.column_count.toString())],
-                        ['👀 Preview Rows', chalk.blue(result.data.preview_data.length.toString())]
+                        [' Total Rows', chalk.green(result.data.row_count.toString())],
+                        [' Column Count', chalk.yellow(result.data.column_count.toString())],
+                        [' Preview Rows', chalk.blue(result.data.preview_data.length.toString())]
                     );
 
-                    console.log(chalk.green('✅ Quick Analysis Summary:'));
+                    console.log(chalk.green(' Quick Analysis Summary:'));
                     console.log(summaryTable.toString());
 
                     if (result.data.columns_info.length > 0) {
@@ -1342,17 +1342,17 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
                                 chalk.yellow(col.column_name),
                                 chalk.blue(col.data_type),
                                 chalk.gray(col.max_length?.toString() || 'N/A'),
-                                col.is_nullable ? chalk.green('✅') : chalk.red('❌'),
-                                col.is_identity ? chalk.green('🔑') : chalk.gray('➖')
+                                col.is_nullable ? chalk.green('') : chalk.red(''),
+                                col.is_identity ? chalk.green('') : chalk.gray('')
                             ]);
                         });
 
-                        console.log(chalk.cyan('\n📋 Column Information:'));
+                        console.log(chalk.cyan('\n Column Information:'));
                         console.log(columnsTable.toString());
                     }
 
                     if (result.data.preview_data.length > 0) {
-                        console.log(chalk.cyan('\n👀 Preview Data:'));
+                        console.log(chalk.cyan('\n Preview Data:'));
                         const previewTable = new Table({
                             head: Object.keys(result.data.preview_data[0]).map(key => chalk.cyan(key)),
                             style: { head: ['cyan'] }
@@ -1371,9 +1371,9 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
         });
     });
 
-    describe('⚙️ Stored Procedure Execution', () => {
-        test('🚀 mcp_execute_procedure - should execute stored procedure', async () => {
-            console.log(chalk.cyan('\n🚀 Testing Stored Procedure Execution'));
+    describe(' Stored Procedure Execution', () => {
+        test(' mcp_execute_procedure - should execute stored procedure', async () => {
+            console.log(chalk.cyan('\n Testing Stored Procedure Execution'));
 
             // First, let's find a simple stored procedure to test with
             const spSearchResult = await mcp_search_objects_by_type({
@@ -1393,13 +1393,13 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
                     const testProcedure = simpleProcedures[0];
                     const procedureName = `[${testProcedure.schema_name}].[${testProcedure.object_name}]`;
 
-                    console.log(chalk.blue(`📋 Testing procedure: ${procedureName}`));
+                    console.log(chalk.blue(` Testing procedure: ${procedureName}`));
 
                     // First get the procedure structure to understand parameters
                     const spStructure = await mcp_sp_structure({ sp_name: procedureName });
 
                     if (spStructure.success && spStructure.data) {
-                        console.log(chalk.yellow(`📝 Parameters found: ${spStructure.data.parameters?.length || 0}`));
+                        console.log(chalk.yellow(` Parameters found: ${spStructure.data.parameters?.length || 0}`));
 
                         // Try to execute with minimal parameters
                         const executeResult = await mcp_execute_procedure({
@@ -1411,7 +1411,7 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
                         expect(executeResult).toHaveProperty('success');
 
                         if (executeResult.success) {
-                            console.log(chalk.green('✅ Procedure executed successfully!'));
+                            console.log(chalk.green(' Procedure executed successfully!'));
 
                             if (executeResult.data && Array.isArray(executeResult.data) && executeResult.data.length > 0) {
                                 const resultTable = new Table({
@@ -1429,10 +1429,10 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
 
                                 console.log(resultTable.toString());
                             } else {
-                                console.log(chalk.blue('📊 Procedure executed but returned no data'));
+                                console.log(chalk.blue(' Procedure executed but returned no data'));
                             }
                         } else {
-                            console.log(chalk.yellow('⚠️ Procedure execution failed (expected for procedures requiring parameters)'));
+                            console.log(chalk.yellow(' Procedure execution failed (expected for procedures requiring parameters)'));
                             if (!executeResult.success) {
                                 console.log(chalk.gray(`Error: ${executeResult.error}`));
                                 expect(executeResult.error).toBeDefined();
@@ -1440,7 +1440,7 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
                         }
                     }
                 } else {
-                    console.log(chalk.yellow('⚠️ No suitable test procedures found, testing with a known procedure pattern'));
+                    console.log(chalk.yellow(' No suitable test procedures found, testing with a known procedure pattern'));
 
                     // Test the function structure even if we can't execute a real procedure
                     const testResult = await mcp_execute_procedure({
@@ -1454,10 +1454,10 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
                         expect(testResult.error).toBeDefined();
                     }
 
-                    console.log(chalk.green('✅ Function structure validation passed'));
+                    console.log(chalk.green(' Function structure validation passed'));
                 }
             } else {
-                console.log(chalk.yellow('⚠️ Could not find procedures to test with'));
+                console.log(chalk.yellow(' Could not find procedures to test with'));
 
                 // Still test the function exists and has proper structure
                 const testResult = await mcp_execute_procedure({
@@ -1468,12 +1468,12 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
                 expect(testResult).toHaveProperty('success');
                 expect(testResult).toHaveProperty('error');
 
-                console.log(chalk.green('✅ Function interface validation passed'));
+                console.log(chalk.green(' Function interface validation passed'));
             }
         });
 
-        test('📋 mcp_execute_procedure - should handle parameters correctly', async () => {
-            console.log(chalk.cyan('\n📋 Testing Stored Procedure with Parameters'));
+        test(' mcp_execute_procedure - should handle parameters correctly', async () => {
+            console.log(chalk.cyan('\n Testing Stored Procedure with Parameters'));
 
             // Test parameter handling with a non-existent procedure
             const result = await mcp_execute_procedure({
@@ -1496,7 +1496,7 @@ describe('MCP SQL Server Tools - Comprehensive Analysis', () => {
                 console.log(chalk.gray(`Expected error: ${result.error}`));
             }
 
-            console.log(chalk.green('✅ Parameter handling validation passed'));
+            console.log(chalk.green(' Parameter handling validation passed'));
         });
     });
 });  
