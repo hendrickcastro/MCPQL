@@ -208,5 +208,16 @@ export const MCP_MSQL_TOOLS = [
       },
       required: ["table_name", "column_name"]
     }
+  },
+
+  // 11. ESTADO DE SEGURIDAD (nuevo)
+  {
+    name: "mcp_get_security_status",
+    description: "Get current security configuration and status for database operations",
+    inputSchema: {
+      type: "object",
+      properties: {},
+      required: []
+    }
   }
 ];

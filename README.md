@@ -115,7 +115,7 @@ DB_TRUST_SERVER_CERTIFICATE=true
 
 ## 🛠️ Available Tools
 
-MCPQL provides 10 comprehensive tools for SQL Server database operations:
+MCPQL provides 11 comprehensive tools for SQL Server database operations:
 
 ### 1. 🏗️ **Table Analysis** - `mcp_table_analysis`
 Complete table structure analysis including columns, keys, indexes, and constraints.
@@ -146,6 +146,9 @@ Get dependencies for database objects (tables, views, stored procedures, etc.).
 
 ### 10. 🎯 **Sample Values** - `mcp_get_sample_values`
 Get sample values from a specific column in a table.
+
+### 11. 🔒 **Security Status** - `mcp_get_security_status`
+Get current security configuration and status for database operations.
 
 ## 📋 Usage Examples
 
@@ -267,6 +270,9 @@ Set `DB_AUTHENTICATION_TYPE` to one of:
 | `DB_CANCEL_TIMEOUT` | Cancel timeout (ms) | 5000 | All |
 | `DB_PACKET_SIZE` | Packet size (bytes) | 4096 | All |
 | `DB_CONNECTION_STRING` | Complete connection string | - | Alternative to individual settings |
+| **Security Controls** |
+| `DB_ALLOW_MODIFICATIONS` | Allow DML/DDL operations | false | All |
+| `DB_ALLOW_STORED_PROCEDURES` | Allow stored procedure execution | false | All |
 
 ## 🔧 Connection Configuration Examples
 
@@ -395,6 +401,88 @@ Set `DB_AUTHENTICATION_TYPE` to one of:
   }
 }
 ```
+
+## 🔒 Security Features
+
+MCPQL includes comprehensive security controls to prevent accidental database modifications, especially important in production environments.
+
+### 🛡️ Security Controls
+
+#### Database Modification Protection
+- **`DB_ALLOW_MODIFICATIONS`**: Controls DML/DDL operations (INSERT, UPDATE, DELETE, ALTER, DROP, CREATE)
+- **`DB_ALLOW_STORED_PROCEDURES`**: Controls stored procedure execution
+- **Default**: Both variables default to `false` for maximum security
+
+#### Security Status Tool
+Use `mcp_get_security_status` to check current security configuration:
+```typescript
+const status = await mcp_get_security_status({});
+```
+
+### 🔧 Enabling Operations
+
+#### For Development Environment
+```json
+{
+  "mcpServers": {
+    "mcpql": {
+      "command": "npx",
+      "args": ["-y", "hendrickcastro/mcpql"],
+      "env": {
+        "DB_SERVER": "localhost",
+        "DB_NAME": "MyDatabase",
+        "DB_USER": "sa",
+        "DB_PASSWORD": "YourPassword123!",
+        "DB_ALLOW_MODIFICATIONS": "true",
+        "DB_ALLOW_STORED_PROCEDURES": "true"
+      }
+    }
+  }
+}
+```
+
+#### For Production Environment (Recommended)
+```json
+{
+  "mcpServers": {
+    "mcpql": {
+      "command": "npx",
+      "args": ["-y", "hendrickcastro/mcpql"],
+      "env": {
+        "DB_SERVER": "prod-server",
+        "DB_NAME": "ProductionDB",
+        "DB_USER": "readonly_user",
+        "DB_PASSWORD": "secure_password",
+        "DB_ALLOW_MODIFICATIONS": "false",
+        "DB_ALLOW_STORED_PROCEDURES": "false"
+      }
+    }
+  }
+}
+```
+
+### 🚨 Security Error Messages
+
+When operations are blocked, MCPQL provides clear guidance:
+
+```
+Error: Las operaciones de modificación están deshabilitadas por seguridad.
+Para habilitar modificaciones, configure: DB_ALLOW_MODIFICATIONS=true
+
+Error: La ejecución de procedimientos almacenados está deshabilitada por seguridad.
+Para habilitar procedimientos almacenados, configure: DB_ALLOW_STORED_PROCEDURES=true
+```
+
+### 📋 Always Allowed Operations
+
+These operations are always permitted regardless of security settings:
+- SELECT queries
+- Table analysis and schema inspection
+- Column statistics and data preview
+- Object search and dependency analysis
+- Database metadata operations
+
+For complete security documentation, see [SECURITY.md](SECURITY.md).
 
 ## 🚨 Troubleshooting Common Issues
 

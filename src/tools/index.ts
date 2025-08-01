@@ -42,3 +42,8 @@ export {
   mcp_search_objects_by_type,
   mcp_get_object_dependencies
 } from './objectSearch.js';
+
+// Security tools
+export {
+  mcp_get_security_status   // Get current security configuration
+} from './securityOperations.js';

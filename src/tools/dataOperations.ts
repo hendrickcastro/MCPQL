@@ -1,6 +1,7 @@
 import { getPool } from '../db.js';
 import { normalizeSqlObjectName } from '../utils.js';
 import { ToolResult } from './types.js';
+import { validateStoredProcedurePermission, validateQueryPermission } from '../security.js';
 
 /**
  * Execute a SQL Server stored procedure with parameters and return results
@@ -8,6 +9,12 @@ import { ToolResult } from './types.js';
 export const mcp_execute_procedure = async (args: { sp_name: string; params?: object }): Promise<ToolResult<any[]>> => {
   const { sp_name, params } = args;
   console.log('Executing mcp_execute_procedure with:', args);
+
+  // Security validation for stored procedure execution
+  const permission = validateStoredProcedurePermission(sp_name);
+  if (!permission.allowed) {
+    return { success: false, error: permission.message || 'Stored procedure execution not allowed' };
+  }
 
   try {
     const pool = getPool();
@@ -64,6 +71,13 @@ export const mcp_preview_data = async (args: { table_name: string; filters?: obj
 export const mcp_execute_query = async (args: { query: string }): Promise<ToolResult<any[]>> => {
   const { query } = args;
   console.log('Executing mcp_execute_query with query:', query);
+
+  // Security validation for SQL query execution
+  const permission = validateQueryPermission(query);
+  if (!permission.allowed) {
+    return { success: false, error: permission.message || 'Query execution not allowed' };
+  }
+
   try {
     const pool = getPool();
     const result = await pool.request().query(query);
