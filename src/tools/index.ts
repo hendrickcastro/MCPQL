@@ -29,8 +29,7 @@ export {
 // 5-6. SQL execution tools
 export {
   mcp_execute_procedure, // Execute stored procedure
-  mcp_execute_query,     // Execute SQL query
-  mcp_confirm_and_execute // Confirm and execute with token
+  mcp_execute_query       // Execute SQL query
 } from './dataOperations.js';
 
 // 8-9. Search tools
