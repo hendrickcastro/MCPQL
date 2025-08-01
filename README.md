@@ -15,6 +15,7 @@
 [![MCP Protocol](https://img.shields.io/badge/MCP-Protocol-purple)](https://github.com/modelcontextprotocol/sdk)
 [![Claude Desktop](https://img.shields.io/badge/Claude-Desktop-orange)](https://claude.ai/desktop)
 [![Cursor IDE](https://img.shields.io/badge/Cursor-IDE-green)](https://cursor.sh/)
+[![Trae AI](https://img.shields.io/badge/Trae%20AI-IDE-blue)](https://trae.ai/)
 [![Docker](https://img.shields.io/badge/Docker-Ready-blue)](https://hub.docker.com/r/hendrickcastro/mcpql)
 [![Security](https://img.shields.io/badge/Security-Audited-green)](https://github.com/hendrickcastro/MCPQL/security)
 [![Maintenance](https://img.shields.io/badge/Maintained-Yes-brightgreen)](https://github.com/hendrickcastro/MCPQL/graphs/commit-activity)
