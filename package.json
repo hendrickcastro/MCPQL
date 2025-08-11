@@ -18,7 +18,8 @@
     "build": "npm run clean && tsc",
     "prepublishOnly": "npm run build",
     "test": "npm run build && jest",
-    "prepare": "npm run build"
+    "prepare": "npm run build",
+    "postinstall": "npm run build"
   },
   "keywords": [
     "mcp",
