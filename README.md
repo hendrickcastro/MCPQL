@@ -33,6 +33,8 @@ A comprehensive **Model Context Protocol (MCP)** server for **SQL Server** datab
 #### Option 1: Using npx from GitHub (Recommended)
 No installation needed! Just configure your MCP client:
 
+> **⚠️ NPX Azure MSAL Issue**: If you encounter the error `Cannot find module './index-node-CtW_2rqJ.js'`, see the [NPX Troubleshooting](#-npx-troubleshooting) section below.
+
 **For Claude Desktop (`claude_desktop_config.json`):**
 ```json
 {
@@ -475,6 +477,66 @@ MCPQL/
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🔧 NPX Troubleshooting
+
+### Azure MSAL Dependency Issue
+
+If you encounter this error when using `npx mcpql`:
+
+```
+Error: Cannot find module './index-node-CtW_2rqJ.js'
+Require stack:
+- ...\node_modules\@azure\msal-common\lib\index.cjs
+```
+
+This is a known issue with Azure MSAL dependencies when using npx. Here are the solutions:
+
+#### Solution 1: Global Installation (Recommended)
+```bash
+npm install -g mcpql
+mcpql
+```
+
+#### Solution 2: Use NPX with --yes flag
+```bash
+npx --yes mcpql
+```
+
+#### Solution 3: Clear NPX Cache
+```bash
+npm cache clean --force
+# Windows PowerShell:
+Remove-Item -Recurse -Force "$env:LOCALAPPDATA\npm-cache\_npx" -ErrorAction SilentlyContinue
+```
+
+#### Solution 4: Automated Fix Script
+If you have the source code:
+```bash
+npm run fix-npx
+```
+
+#### Solution 5: Use NPX-Compatible Version
+For development with source code:
+```bash
+npm run start:npx
+```
+
+### Why This Happens
+
+This issue occurs because:
+- Azure MSAL packages have complex internal dependencies
+- NPX cache sometimes doesn't resolve these dependencies correctly
+- The problem is specific to the npx execution environment
+
+### Verification
+
+After applying any solution, verify it works:
+```bash
+mcpql --version
+```
+
+For more details, see [doc/NPX-Azure-MSAL-Fix.md](./doc/NPX-Azure-MSAL-Fix.md)
 
 ## 🙏 Acknowledgments
 

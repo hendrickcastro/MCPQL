@@ -5,7 +5,8 @@
   "type": "module",
   "main": "dist/server.js",
   "bin": {
-    "mcpql": "./dist/server.js"
+    "mcpql": "./dist/server.js",
+    "mcpql-npx": "./dist/server-npx.js"
   },
   "files": [
     "dist/**/*",
@@ -14,11 +15,13 @@
   ],
   "scripts": {
     "clean": "rimraf dist",
-    "start": "ts-node src/server.ts",
+    "start": "ts-node --esm src/server.ts",
+    "start:npx": "ts-node --project tsconfig.node.json src/server-npx.ts",
     "build": "npm run clean && tsc",
     "prepublishOnly": "npm run build",
     "test": "npm run build && jest",
-    "prepare": "npm run build"
+    "prepare": "npm run build",
+    "fix-npx": "powershell -ExecutionPolicy Bypass -File ./_Guide/fix_npx_azure_msal_issue.ps1"
   },
   "keywords": [
     "mcp",
