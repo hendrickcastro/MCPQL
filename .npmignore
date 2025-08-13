@@ -1,0 +1,45 @@
+# Development files
+*.log
+.env
+.env.*
+
+# Tests
+__tests__/
+*.test.ts
+*.test.js
+jest.config.*
+run-tests.sh
+
+# Development tools
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Node modules (already handled by npm)
+node_modules/
+
+# Documentation (except README)
+doc/
+_Guide/
+scripts/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# TypeScript source maps
+*.map
+
+# Temporary files
+tmp/
+temp/

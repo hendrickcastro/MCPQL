@@ -9,6 +9,8 @@
   },
   "files": [
     "dist/**/*",
+    "src/**/*",
+    "tsconfig.json",
     "README.md",
     "LICENSE"
   ],
@@ -16,10 +18,9 @@
     "clean": "rimraf dist",
     "start": "ts-node src/server.ts",
     "build": "npm run clean && tsc",
-    "prepublishOnly": "npm run build",
-    "test": "npm run build && jest",
-    "prepare": "npm run build",
-    "postinstall": "npm run build"
+    "prepare-package": "node scripts/prepare-package.js",
+    "prepublishOnly": "npm run prepare-package",
+    "test": "npm run build && jest"
   },
   "keywords": [
     "mcp",
@@ -59,7 +60,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/hendrickcastro/MCPQL.git"
+    "url": "git+https://github.com/hendrickcastro/MCPQL.git"
   },
   "homepage": "https://github.com/hendrickcastro/MCPQL",
   "bugs": {
