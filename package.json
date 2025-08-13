@@ -20,7 +20,8 @@
     "build": "npm run clean && tsc",
     "prepare-package": "node scripts/prepare-package.js",
     "prepublishOnly": "npm run prepare-package",
-    "test": "npm run build && jest"
+    "test": "npm run build && jest",
+    "postinstall": "echo 'MCPQL installed successfully!'"
   },
   "keywords": [
     "mcp",
