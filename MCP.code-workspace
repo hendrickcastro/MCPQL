@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "../MCPCosmosDB"
+		},
+		{
+			"path": "."
+		},
+		{
+			"path": "../MCPFirestoreDB"
+		}
+	],
+	"settings": {}
+}
