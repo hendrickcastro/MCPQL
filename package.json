@@ -68,11 +68,15 @@
     "url": "https://github.com/hendrickcastro/MCPQL/issues"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.13.1",
     "@azure/msal-common": "^14.8.0",
+    "@modelcontextprotocol/sdk": "^1.13.1",
     "dotenv": "^16.5.0",
     "mssql": "^11.0.1"
   },
+  "bundledDependencies": [
+    "@modelcontextprotocol/sdk",
+    "mssql"
+  ],
   "devDependencies": {
     "@types/jest": "^30.0.0",
     "@types/mssql": "^9.1.7",
