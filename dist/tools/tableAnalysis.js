@@ -5,7 +5,7 @@ import { normalizeSqlObjectName } from '../utils.js';
  */
 export const mcp_table_analysis = async (args) => {
     const { table_name } = args;
-    console.log('Executing mcp_table_analysis with:', { table_name });
+    console.error('Executing mcp_table_analysis with:', { table_name });
     const normalizedTableName = normalizeSqlObjectName(table_name);
     try {
         const pool = getPool();
@@ -189,7 +189,7 @@ export const mcp_table_analysis = async (args) => {
  */
 export const mcp_get_columns = async (args) => {
     const { table_name } = args;
-    console.log('Executing mcp_get_columns with:', { table_name });
+    console.error('Executing mcp_get_columns with:', { table_name });
     const normalizedTableName = normalizeSqlObjectName(table_name);
     try {
         const pool = getPool();
@@ -237,7 +237,7 @@ export const mcp_get_columns = async (args) => {
  */
 export const mcp_get_primary_keys = async (args) => {
     const { table_name } = args;
-    console.log('Executing mcp_get_primary_keys with:', { table_name });
+    console.error('Executing mcp_get_primary_keys with:', { table_name });
     const normalizedTableName = normalizeSqlObjectName(table_name);
     try {
         const pool = getPool();
@@ -273,7 +273,7 @@ export const mcp_get_primary_keys = async (args) => {
  */
 export const mcp_get_foreign_keys = async (args) => {
     const { table_name } = args;
-    console.log('Executing mcp_get_foreign_keys with:', { table_name });
+    console.error('Executing mcp_get_foreign_keys with:', { table_name });
     const normalizedTableName = normalizeSqlObjectName(table_name);
     try {
         const pool = getPool();
@@ -318,7 +318,7 @@ export const mcp_get_foreign_keys = async (args) => {
  */
 export const mcp_get_indexes = async (args) => {
     const { table_name } = args;
-    console.log('Executing mcp_get_indexes with:', { table_name });
+    console.error('Executing mcp_get_indexes with:', { table_name });
     const normalizedTableName = normalizeSqlObjectName(table_name);
     try {
         const pool = getPool();
@@ -362,7 +362,7 @@ export const mcp_get_indexes = async (args) => {
  */
 export const mcp_get_constraints = async (args) => {
     const { table_name } = args;
-    console.log('Executing mcp_get_constraints with:', { table_name });
+    console.error('Executing mcp_get_constraints with:', { table_name });
     const normalizedTableName = normalizeSqlObjectName(table_name);
     try {
         const pool = getPool();
@@ -408,7 +408,7 @@ export const mcp_get_constraints = async (args) => {
  */
 export const mcp_get_all_table_info = async (args) => {
     const { table_name } = args;
-    console.log('Executing mcp_get_all_table_info with:', { table_name });
+    console.error('Executing mcp_get_all_table_info with:', { table_name });
     try {
         // Call individual functions in parallel for performance
         const [columnsResult, primaryKeysResult, foreignKeysResult, indexesResult, constraintsResult] = await Promise.all([

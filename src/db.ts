@@ -141,7 +141,7 @@ const getConnectionConfig = (): { config?: sql.config; connectionString?: string
   const connectionString = process.env.DB_CONNECTION_STRING;
 
   if (connectionString) {
-    console.log('Using provided connection string');
+    console.error('Using provided connection string');
     return { connectionString };
   }
 
@@ -170,7 +170,7 @@ export const connectDB = async (): Promise<sql.ConnectionPool> => {
 
     // Start a new connection
     isConnecting = true;
-    console.log('Connecting to SQL Server...');
+    console.error('Connecting to SQL Server...');
 
     // Create connection promise based on configuration type
     if (connectionString) {
@@ -185,7 +185,7 @@ export const connectDB = async (): Promise<sql.ConnectionPool> => {
     pool = await connectionPromise;
     isConnecting = false;
 
-    console.log('Successfully connected to SQL Server');
+    console.error('Successfully connected to SQL Server');
 
     // Connection event handlers to manage state
     pool.on('error', (err) => {
@@ -197,7 +197,7 @@ export const connectDB = async (): Promise<sql.ConnectionPool> => {
     });
 
     pool.on('close', () => {
-      console.log('SQL connection pool closed');
+      console.error('SQL connection pool closed');
       pool = null;
       isConnecting = false;
       connectionPromise = null;
@@ -245,7 +245,7 @@ export const testConnection = async (): Promise<boolean> => {
     const testPool = await connectDB();
     const request = testPool.request();
     await request.query('SELECT 1 as test');
-    console.log(' Database connection test successful');
+    console.error(' Database connection test successful');
     return true;
   } catch (err) {
     console.error(' Database connection test failed:', err);
@@ -258,7 +258,7 @@ export const closePool = async (): Promise<void> => {
   if (pool) {
     try {
       await pool.close();
-      console.log('SQL Server connection closed');
+      console.error('SQL Server connection closed');
     } catch (err) {
       console.error('Error closing SQL connection:', err);
     } finally {

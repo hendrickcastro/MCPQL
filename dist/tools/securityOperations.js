@@ -3,7 +3,7 @@ import { getSecurityStatus } from '../security.js';
  * Get current security configuration and status
  */
 export const mcp_get_security_status = async () => {
-    console.log('Executing mcp_get_security_status');
+    console.error('Executing mcp_get_security_status');
     try {
         const status = getSecurityStatus();
         const result = {

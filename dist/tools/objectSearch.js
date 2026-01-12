@@ -5,7 +5,7 @@ import { normalizeSqlObjectName } from '../utils.js';
  */
 export const mcp_get_dependencies = async (args) => {
     const { object_name } = args;
-    console.log('Executing mcp_get_dependencies with:', { object_name });
+    console.error('Executing mcp_get_dependencies with:', { object_name });
     try {
         const pool = getPool();
         const query = `
@@ -34,7 +34,7 @@ export const mcp_get_dependencies = async (args) => {
  */
 export const mcp_search_objects_by_name = async (args) => {
     const { pattern, object_types } = args;
-    console.log('Executing mcp_search_objects_by_name with:', args);
+    console.error('Executing mcp_search_objects_by_name with:', args);
     try {
         const pool = getPool();
         let typeFilter = '';
@@ -86,7 +86,7 @@ export const mcp_search_objects_by_name = async (args) => {
  */
 export const mcp_search_in_definitions = async (args) => {
     const { pattern, object_types } = args;
-    console.log('Executing mcp_search_in_definitions with:', args);
+    console.error('Executing mcp_search_in_definitions with:', args);
     try {
         const pool = getPool();
         let typeFilter = '';
@@ -137,7 +137,7 @@ export const mcp_search_in_definitions = async (args) => {
  */
 export const mcp_search_objects_by_type = async (args) => {
     const { object_type } = args;
-    console.log('Executing mcp_search_objects_by_type with:', args);
+    console.error('Executing mcp_search_objects_by_type with:', args);
     try {
         const pool = getPool();
         let sqlType;
@@ -187,7 +187,7 @@ export const mcp_search_objects_by_type = async (args) => {
  */
 export const mcp_get_object_dependencies = async (args) => {
     const { object_name } = args;
-    console.log('Executing mcp_get_object_dependencies with:', args);
+    console.error('Executing mcp_get_object_dependencies with:', args);
     const normalizedName = normalizeSqlObjectName(object_name);
     try {
         const pool = getPool();
@@ -241,7 +241,7 @@ export const mcp_get_object_dependencies = async (args) => {
  */
 export const mcp_search_comprehensive = async (args) => {
     const { pattern, search_in_names = true, search_in_definitions = true, object_types } = args;
-    console.log('Executing mcp_search_comprehensive with:', args);
+    console.error('Executing mcp_search_comprehensive with:', args);
     try {
         const promises = [];
         // Search in object names

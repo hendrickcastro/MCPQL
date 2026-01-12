@@ -1,6 +1,6 @@
 {
   "name": "mcpql",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "MCPQL - SQL Server MCP Server for database analysis and operations",
   "type": "module",
   "main": "dist/server.js",

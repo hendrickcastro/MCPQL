@@ -5,7 +5,7 @@ import { normalizeSqlObjectName } from '../utils.js';
  */
 export const mcp_sp_structure = async (args) => {
     const { sp_name } = args;
-    console.log('Executing mcp_sp_structure with:', { sp_name });
+    console.error('Executing mcp_sp_structure with:', { sp_name });
     const qualified_name = normalizeSqlObjectName(sp_name);
     try {
         const pool = getPool();
@@ -83,7 +83,7 @@ export const mcp_sp_structure = async (args) => {
  */
 export const mcp_get_sp_info = async (args) => {
     const { sp_name } = args;
-    console.log('Executing mcp_get_sp_info with:', { sp_name });
+    console.error('Executing mcp_get_sp_info with:', { sp_name });
     const qualified_name = normalizeSqlObjectName(sp_name);
     try {
         const pool = getPool();
@@ -118,7 +118,7 @@ export const mcp_get_sp_info = async (args) => {
  */
 export const mcp_get_sp_parameters = async (args) => {
     const { sp_name } = args;
-    console.log('Executing mcp_get_sp_parameters with:', { sp_name });
+    console.error('Executing mcp_get_sp_parameters with:', { sp_name });
     const qualified_name = normalizeSqlObjectName(sp_name);
     try {
         const pool = getPool();
@@ -153,7 +153,7 @@ export const mcp_get_sp_parameters = async (args) => {
  */
 export const mcp_get_sp_dependencies = async (args) => {
     const { sp_name } = args;
-    console.log('Executing mcp_get_sp_dependencies with:', { sp_name });
+    console.error('Executing mcp_get_sp_dependencies with:', { sp_name });
     const qualified_name = normalizeSqlObjectName(sp_name);
     try {
         const pool = getPool();
@@ -186,7 +186,7 @@ export const mcp_get_sp_dependencies = async (args) => {
  */
 export const mcp_get_sp_definition = async (args) => {
     const { sp_name } = args;
-    console.log('Executing mcp_get_sp_definition with:', { sp_name });
+    console.error('Executing mcp_get_sp_definition with:', { sp_name });
     const qualified_name = normalizeSqlObjectName(sp_name);
     try {
         const pool = getPool();
@@ -215,7 +215,7 @@ export const mcp_get_sp_definition = async (args) => {
  */
 export const mcp_get_sp_complete_structure = async (args) => {
     const { sp_name } = args;
-    console.log('Executing mcp_get_sp_complete_structure with:', { sp_name });
+    console.error('Executing mcp_get_sp_complete_structure with:', { sp_name });
     try {
         // Call individual functions in parallel for performance
         const [infoResult, parametersResult, dependenciesResult, definitionResult] = await Promise.all([
@@ -253,7 +253,7 @@ export const mcp_get_sp_complete_structure = async (args) => {
  */
 export const mcp_get_sp_definition_simple = async (args) => {
     const { sp_name } = args;
-    console.log('Executing mcp_get_sp_definition_simple with:', { sp_name });
+    console.error('Executing mcp_get_sp_definition_simple with:', { sp_name });
     const qualified_name = normalizeSqlObjectName(sp_name);
     try {
         const pool = getPool();
@@ -281,7 +281,7 @@ export const mcp_get_sp_definition_simple = async (args) => {
  */
 export const mcp_get_sp_parameters_simple = async (args) => {
     const { sp_name } = args;
-    console.log('Executing mcp_get_sp_parameters_simple with:', { sp_name });
+    console.error('Executing mcp_get_sp_parameters_simple with:', { sp_name });
     const qualified_name = normalizeSqlObjectName(sp_name);
     try {
         const pool = getPool();
@@ -311,7 +311,7 @@ export const mcp_get_sp_parameters_simple = async (args) => {
  */
 export const mcp_get_sp_dependencies_simple = async (args) => {
     const { sp_name } = args;
-    console.log('Executing mcp_get_sp_dependencies_simple with:', { sp_name });
+    console.error('Executing mcp_get_sp_dependencies_simple with:', { sp_name });
     const qualified_name = normalizeSqlObjectName(sp_name);
     try {
         const pool = getPool();
@@ -341,7 +341,7 @@ export const mcp_get_sp_dependencies_simple = async (args) => {
  */
 export const mcp_get_sp_all_info_simple = async (args) => {
     const { sp_name } = args;
-    console.log('Executing mcp_get_sp_all_info_simple with:', { sp_name });
+    console.error('Executing mcp_get_sp_all_info_simple with:', { sp_name });
     try {
         // Call individual functions in parallel for performance
         const [definitionResult, parametersResult, dependenciesResult] = await Promise.all([
