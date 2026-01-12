@@ -119,7 +119,7 @@ const buildConfig = () => {
 const getConnectionConfig = () => {
     const connectionString = process.env.DB_CONNECTION_STRING;
     if (connectionString) {
-        console.log('Using provided connection string');
+        console.error('Using provided connection string');
         return { connectionString };
     }
     return { config: buildConfig() };
@@ -142,7 +142,7 @@ export const connectDB = async () => {
         }
         // Start a new connection
         isConnecting = true;
-        console.log('Connecting to SQL Server...');
+        console.error('Connecting to SQL Server...');
         // Create connection promise based on configuration type
         if (connectionString) {
             connectionPromise = new sql.ConnectionPool(connectionString).connect();
@@ -156,7 +156,7 @@ export const connectDB = async () => {
         // Wait for connection and update state
         pool = await connectionPromise;
         isConnecting = false;
-        console.log('Successfully connected to SQL Server');
+        console.error('Successfully connected to SQL Server');
         // Connection event handlers to manage state
         pool.on('error', (err) => {
             console.error('SQL connection pool error:', err);
@@ -166,7 +166,7 @@ export const connectDB = async () => {
             connectionPromise = null;
         });
         pool.on('close', () => {
-            console.log('SQL connection pool closed');
+            console.error('SQL connection pool closed');
             pool = null;
             isConnecting = false;
             connectionPromise = null;
@@ -211,7 +211,7 @@ export const testConnection = async () => {
         const testPool = await connectDB();
         const request = testPool.request();
         await request.query('SELECT 1 as test');
-        console.log(' Database connection test successful');
+        console.error(' Database connection test successful');
         return true;
     }
     catch (err) {
@@ -224,7 +224,7 @@ export const closePool = async () => {
     if (pool) {
         try {
             await pool.close();
-            console.log('SQL Server connection closed');
+            console.error('SQL Server connection closed');
         }
         catch (err) {
             console.error('Error closing SQL connection:', err);

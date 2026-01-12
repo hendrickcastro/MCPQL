@@ -7,7 +7,7 @@ import { ToolResult } from './types.js';
  */
 export const mcp_get_dependencies = async (args: { object_name: string }): Promise<ToolResult<any[]>> => {
   const { object_name } = args;
-  console.log('Executing mcp_get_dependencies with:', { object_name });
+  console.error('Executing mcp_get_dependencies with:', { object_name });
 
   try {
     const pool = getPool();
@@ -41,7 +41,7 @@ export const mcp_search_objects_by_name = async (args: {
   object_types?: string[]
 }): Promise<ToolResult<any[]>> => {
   const { pattern, object_types } = args;
-  console.log('Executing mcp_search_objects_by_name with:', args);
+  console.error('Executing mcp_search_objects_by_name with:', args);
 
   try {
     const pool = getPool();
@@ -102,7 +102,7 @@ export const mcp_search_in_definitions = async (args: {
   object_types?: string[]
 }): Promise<ToolResult<any[]>> => {
   const { pattern, object_types } = args;
-  console.log('Executing mcp_search_in_definitions with:', args);
+  console.error('Executing mcp_search_in_definitions with:', args);
 
   try {
     const pool = getPool();
@@ -161,7 +161,7 @@ export const mcp_search_objects_by_type = async (args: {
   object_type: string
 }): Promise<ToolResult<any[]>> => {
   const { object_type } = args;
-  console.log('Executing mcp_search_objects_by_type with:', args);
+  console.error('Executing mcp_search_objects_by_type with:', args);
 
   try {
     const pool = getPool();
@@ -208,7 +208,7 @@ export const mcp_get_object_dependencies = async (args: {
   object_name: string
 }): Promise<ToolResult<any[]>> => {
   const { object_name } = args;
-  console.log('Executing mcp_get_object_dependencies with:', args);
+  console.error('Executing mcp_get_object_dependencies with:', args);
 
   const normalizedName = normalizeSqlObjectName(object_name);
 
@@ -285,7 +285,7 @@ export const mcp_search_comprehensive = async (args: {
     search_in_definitions = true, 
     object_types 
   } = args;
-  console.log('Executing mcp_search_comprehensive with:', args);
+  console.error('Executing mcp_search_comprehensive with:', args);
 
   try {
     const promises = [];

@@ -14,7 +14,7 @@ export const mcp_table_analysis = async (args: { table_name: string }): Promise<
   table_info: any;
 }>> => {
   const { table_name } = args;
-  console.log('Executing mcp_table_analysis with:', { table_name });
+  console.error('Executing mcp_table_analysis with:', { table_name });
 
   const normalizedTableName = normalizeSqlObjectName(table_name);
 
@@ -208,7 +208,7 @@ export const mcp_table_analysis = async (args: { table_name: string }): Promise<
  */
 export const mcp_get_columns = async (args: { table_name: string }): Promise<ToolResult<any[]>> => {
   const { table_name } = args;
-  console.log('Executing mcp_get_columns with:', { table_name });
+  console.error('Executing mcp_get_columns with:', { table_name });
 
   const normalizedTableName = normalizeSqlObjectName(table_name);
 
@@ -260,7 +260,7 @@ export const mcp_get_columns = async (args: { table_name: string }): Promise<Too
  */
 export const mcp_get_primary_keys = async (args: { table_name: string }): Promise<ToolResult<any[]>> => {
   const { table_name } = args;
-  console.log('Executing mcp_get_primary_keys with:', { table_name });
+  console.error('Executing mcp_get_primary_keys with:', { table_name });
 
   const normalizedTableName = normalizeSqlObjectName(table_name);
 
@@ -300,7 +300,7 @@ export const mcp_get_primary_keys = async (args: { table_name: string }): Promis
  */
 export const mcp_get_foreign_keys = async (args: { table_name: string }): Promise<ToolResult<any[]>> => {
   const { table_name } = args;
-  console.log('Executing mcp_get_foreign_keys with:', { table_name });
+  console.error('Executing mcp_get_foreign_keys with:', { table_name });
 
   const normalizedTableName = normalizeSqlObjectName(table_name);
 
@@ -349,7 +349,7 @@ export const mcp_get_foreign_keys = async (args: { table_name: string }): Promis
  */
 export const mcp_get_indexes = async (args: { table_name: string }): Promise<ToolResult<any[]>> => {
   const { table_name } = args;
-  console.log('Executing mcp_get_indexes with:', { table_name });
+  console.error('Executing mcp_get_indexes with:', { table_name });
 
   const normalizedTableName = normalizeSqlObjectName(table_name);
 
@@ -397,7 +397,7 @@ export const mcp_get_indexes = async (args: { table_name: string }): Promise<Too
  */
 export const mcp_get_constraints = async (args: { table_name: string }): Promise<ToolResult<any[]>> => {
   const { table_name } = args;
-  console.log('Executing mcp_get_constraints with:', { table_name });
+  console.error('Executing mcp_get_constraints with:', { table_name });
 
   const normalizedTableName = normalizeSqlObjectName(table_name);
 
@@ -453,7 +453,7 @@ export const mcp_get_all_table_info = async (args: { table_name: string }): Prom
   constraints: any[];
 }>> => {
   const { table_name } = args;
-  console.log('Executing mcp_get_all_table_info with:', { table_name });
+  console.error('Executing mcp_get_all_table_info with:', { table_name });
 
   try {
     // Call individual functions in parallel for performance

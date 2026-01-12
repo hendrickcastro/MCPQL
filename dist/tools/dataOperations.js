@@ -6,7 +6,7 @@ import { validateStoredProcedurePermission, validateQueryPermission } from '../s
  */
 export const mcp_execute_procedure = async (args) => {
     const { sp_name, params } = args;
-    console.log('Executing mcp_execute_procedure with:', args);
+    console.error('Executing mcp_execute_procedure with:', args);
     // Security validation for stored procedure execution
     const permission = validateStoredProcedurePermission(sp_name);
     if (!permission.allowed) {
@@ -33,7 +33,7 @@ export const mcp_execute_procedure = async (args) => {
  */
 export const mcp_preview_data = async (args) => {
     const { table_name, filters, limit = 100 } = args;
-    console.log('Executing mcp_preview_data with:', args);
+    console.error('Executing mcp_preview_data with:', args);
     try {
         const pool = getPool();
         const request = pool.request();
@@ -60,7 +60,7 @@ export const mcp_preview_data = async (args) => {
  */
 export const mcp_execute_query = async (args) => {
     const { query } = args;
-    console.log('Executing mcp_execute_query with query:', query);
+    console.error('Executing mcp_execute_query with query:', query);
     // Security validation for SQL query execution
     const permission = validateQueryPermission(query);
     if (!permission.allowed) {
@@ -82,7 +82,7 @@ export const mcp_execute_query = async (args) => {
  */
 export const mcp_get_column_stats = async (args) => {
     const { table_name, column_name } = args;
-    console.log('Executing mcp_get_column_stats with:', args);
+    console.error('Executing mcp_get_column_stats with:', args);
     try {
         const pool = getPool();
         const normalizedTableName = normalizeSqlObjectName(table_name);
@@ -126,7 +126,7 @@ export const mcp_get_column_stats = async (args) => {
  */
 export const mcp_preview_data_enhanced = async (args) => {
     const { table_name, filters, limit = 100 } = args;
-    console.log('Executing mcp_preview_data_enhanced with:', args);
+    console.error('Executing mcp_preview_data_enhanced with:', args);
     try {
         const pool = getPool();
         const request = pool.request();
@@ -168,7 +168,7 @@ export const mcp_preview_data_enhanced = async (args) => {
  */
 export const mcp_get_sample_values = async (args) => {
     const { table_name, column_name, limit = 10 } = args;
-    console.log('Executing mcp_get_sample_values with:', args);
+    console.error('Executing mcp_get_sample_values with:', args);
     try {
         const pool = getPool();
         const normalizedTableName = normalizeSqlObjectName(table_name);
@@ -192,7 +192,7 @@ export const mcp_get_sample_values = async (args) => {
  */
 export const mcp_get_column_stats_enhanced = async (args) => {
     const { table_name, column_name } = args;
-    console.log('Executing mcp_get_column_stats_enhanced with:', args);
+    console.error('Executing mcp_get_column_stats_enhanced with:', args);
     try {
         const pool = getPool();
         const normalizedTableName = normalizeSqlObjectName(table_name);
@@ -241,7 +241,7 @@ export const mcp_get_column_stats_enhanced = async (args) => {
  */
 export const mcp_quick_data_analysis = async (args) => {
     const { table_name, limit = 100 } = args;
-    console.log('Executing mcp_quick_data_analysis with:', args);
+    console.error('Executing mcp_quick_data_analysis with:', args);
     try {
         const pool = getPool();
         const normalizedTableName = normalizeSqlObjectName(table_name);
